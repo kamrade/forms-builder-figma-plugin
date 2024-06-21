@@ -1,0 +1,39 @@
+.button-base {
+  font-size: 1em;
+  line-height: 1;
+  outline: none;
+  box-shadow: none;
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: var(--border-radius-control);
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  background: var(--color-bg-figma-default);
+  color: var(--color-text-default);
+}
+
+.button-base:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.button-base:not(:disabled):hover {
+  background: var(--color-bg-figma-darker);
+}
+
+.button-base:not(:disabled):active {
+  background: var(--color-bg-figma-darker);
+}
+
+.button-base.button-primary {
+  background: var(--color-bg-primary-100);
+  color: var(--color-text-button-primary-100);
+}
+
+.button-base:not(:disabled).button-primary:hover {
+  background: var(--color-bg-primary-200);
+}
+
+.button-base:not(:disabled).button-primary:active {
+  background: var(--color-bg-primary-300);
+}

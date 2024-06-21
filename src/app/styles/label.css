@@ -1,0 +1,9 @@
+.label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+.label-text {
+  min-width: 200px;
+}

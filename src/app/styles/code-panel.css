@@ -1,0 +1,58 @@
+/* Code panel */
+
+.code-board {
+  display: flex;
+  position: relative;
+}
+
+.code-board .row-numbers {
+  width: 50px;
+  color: var(--color-text-code-quotes);
+  border-right: 1px solid var(--color-text-code-comments);
+  position: absolute;
+  top: 0;
+  left: 0;
+  user-select: none;
+}
+
+.code-board .code-container {
+  padding-left: 50px;
+}
+
+.code-board .code-container .code-value {
+  color: var(--color-text-code-value);
+}
+
+.code-errors-panel {
+  background-color: var(--color-bg-figma-darker);
+  border-radius: var(--border-radius-control);
+  padding: var(--border-radius-control);
+  margin: 8px 0;
+  border: 1px solid var(--color-stroke-errors);
+}
+
+.code-errors {
+  color: var(--color-text-code-errors);
+}
+
+
+.code-board .code-container .code-quotes {
+  color: var(--color-text-code-quotes);
+}
+
+.code {
+  background-color: var(--color-bg-figma-default);
+  color: var(--color-text-code-names);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.code code pre {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+pre {
+  margin: 0;
+  padding: 0;
+}
