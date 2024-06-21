@@ -1,4 +1,5 @@
 import { generateUUID } from './generate-uuid';
+import { collectPrimitive } from './collect-primitive';
 
 export function formScanning(
   currentSelection: readonly SceneNode[],
@@ -20,47 +21,50 @@ export function formScanning(
   if (currentForm.type === 'FRAME') {
     currentForm.children.map((frame2, row) => {
       if (frame2.type === 'INSTANCE') {
-        // if this is the Row wrapper
         if (frame2.mainComponent.parent.name === 'RowGrid') {
           const componentProps: any = frame2.componentProperties.type;
           if (componentProps.type === 'VARIANT') {
             const gridArray = componentProps.value.split('|');
-            frame2.children.map((childFrame, i) => {
+
+            // Collect content inside of the grid component
+            frame2.children.map((childFrame, col) => {
               if (childFrame.type === 'INSTANCE') {
-                let fieldType = childFrame.mainComponent.parent.name.substring(12);
-
-                let label = '';
-
-                childFrame.children.map((fieldContentEl: any) => {
-                  if (fieldContentEl.name === '> label') {
-                    label = fieldContentEl.characters;
-                  }
-                });
-
-                let currentField = `${fieldId}, '${
-                  formPrefix + '_' + 'r' + elementCounter + '_' + fieldType
-                }', '${label}', '${fieldType}', ${tenantId}, null`;
-
-                let templateId = generateUUID();
-                let col = i;
-                let weight = Math.floor((gridArray[i] / 12) * 100);
-
-                let currentTemplate = `'${templateId}', ${formTemplateId}, ${row},  ${col}, ${weight}, ${fieldId}, false, 'primitive', null, ${tenantId}`;
-
-                let arc = `${row}, ${i}, ${Math.floor((gridArray[i] / 12) * 100)}`;
-                response.fields.push(currentField);
-                response.templates.push(currentTemplate);
-
+                let res = collectPrimitive(
+                  childFrame,
+                  fieldId,
+                  formPrefix,
+                  elementCounter,
+                  tenantId,
+                  col,
+                  Math.floor((gridArray[col] / 12) * 100),
+                  row,
+                  formTemplateId
+                );
+                response.fields.push(res.currentField);
+                response.templates.push(res.currentTemplate);
                 fieldId += 1;
               }
             });
           }
         }
-        // if this is primitive component
-        else {
+      } else if (frame2.type === 'FRAME') {
+        if (frame2.name === 'Group') {
+          response.fields.push('-- start group');
+          response.templates.push('-- start group');
+          let templateId = generateUUID();
+          let currentField = `${fieldId}, ${
+            formPrefix + '_' + 'r' + elementCounter + '_' + 'group'
+          }, '', 'group', ${tenantId}, null`;
+          let currentTemplate = `'${templateId}', ${formTemplateId}, ${row},  1, 100, ${fieldId}, true, 'group', null, ${tenantId}`;
+          fieldId += 1;
+          response.fields.push(currentField);
+          response.templates.push(currentTemplate);
         }
       }
     });
+  } else {
+    response.fields = ['Please select correct form element'];
+    response.templates = [];
   }
 
   return response;

@@ -12,6 +12,7 @@ export const companyInformation = `
       (20007, 'ci_company_information_v2_r8_text', 'Company VAT number', 'text', 3, null),
       (20008, 'ci_company_information_v2_r9_text', 'Primary Contact Name', 'text', 3, null),
       (20009, 'ci_company_information_v2_r10_text', 'Primary Email Address', 'text', 3, null),
+
       (20010, 'ci_company_information_v2_r11_group', '', 'group', 3, null),
       (20011, 'ci_company_information_v2_r12_title', 'Compliance Contact for Requests for Information', 'subtitle', 3, null),
       (20012, 'ci_company_information_v2_r13_text', 'First Name', 'text', 3, null),
@@ -19,6 +20,7 @@ export const companyInformation = `
       (20014, 'ci_company_information_v2_r15_text', 'Last Name', 'text', 3, null),
       (20015, 'ci_company_information_v2_r16_text', 'Position in Company', 'text', 3, null),
       (20016, 'ci_company_information_v2_r17_text', 'Email Address', 'text', 3, null),
+
       (20017, 'ci_company_information_v2_r18_group', '', 'group', 3, null),
       (20018, 'ci_company_information_v2_r19_title', 'Registered Address', 'subtitle', 3, null),
       (20019, 'ci_company_information_v2_r20_textarea', 'Address', 'textarea', 3, null),
@@ -96,6 +98,7 @@ export const companyInformation = `
       ('c8e0f4b3-ec3a-41be-b82a-f858a62e4753', 610, 4, 2, 50, 20007, false, 'primitive', null, 3),
       ('4747586b-41b1-4fb4-abe5-f75b0b9fdfa1', 610, 5, 1, 50, 20008, false, 'primitive', null, 3),
       ('ddec5c68-bb4a-4007-991d-96635e9ec811', 610, 5, 2, 50, 20009, false, 'primitive', null, 3),
+
       -- Compliance Contact for Requests for Information
       ('728140d8-3b0b-4766-89c2-1536d9ebf4a6', 610, 6, 1, 100, 20010, true, 'group', null, 3),
       ('c6f64bfc-677d-42d3-870e-9182cfc56f66', 610, 1, 1, 100, 20011, false, 'primitive', '728140d8-3b0b-4766-89c2-1536d9ebf4a6', 3),
@@ -104,6 +107,7 @@ export const companyInformation = `
       ('a7dd1838-6eed-4677-bd92-5055634f8b6a', 610, 2, 3, 33, 20014, false, 'primitive', '728140d8-3b0b-4766-89c2-1536d9ebf4a6', 3),
       ('abe8892f-0512-4aea-87ce-84e410144a3c', 610, 3, 1, 50, 20015, false, 'primitive', '728140d8-3b0b-4766-89c2-1536d9ebf4a6', 3),
       ('04394ebc-b15d-4c61-98e4-fa70a9b452e2', 610, 3, 2, 50, 20016, false, 'primitive', '728140d8-3b0b-4766-89c2-1536d9ebf4a6', 3),
+      
       -- Registered Address
       ('8ba004e4-594c-4363-b25c-15f8d9f13b90', 610, 7, 1, 100, 20017, true, 'group', null, 3),
       ('e79082a1-0616-455b-872f-9b373bdcfc2e', 610, 1, 1, 100, 20018, false, 'primitive', '8ba004e4-594c-4363-b25c-15f8d9f13b90', 3),
