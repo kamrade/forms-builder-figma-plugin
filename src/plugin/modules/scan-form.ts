@@ -1,5 +1,4 @@
-import { generateUUID } from './generate-uuid';
-import { collectPrimitive } from './collect-primitive';
+import { recursiveOne } from './recursive-one';
 
 export interface IScanFormParams {
   currentForm: SceneNode;
@@ -10,69 +9,17 @@ export interface IScanFormParams {
 }
 
 export function scanForm(params: IScanFormParams) {
-  const { currentForm, startingFieldId, tenantId, formPrefix, formTemplateId } = params;
+  const { currentForm, startingFieldId } = params;
   let response = { fields: [], templates: [] };
   
   let fieldId = startingFieldId;
   let elementCounter = 1;
 
   if (currentForm.type === 'FRAME') {
-    
-    
-    // Should be moved to recursive function
-    currentForm.children.map((frameLevel2, row) => {
-      if (frameLevel2.type === 'INSTANCE') { // can be instance or frame
-        if (frameLevel2.mainComponent.parent.name === 'RowGrid') {
-          const componentProps: any = frameLevel2.componentProperties.type;
-          if (componentProps.type === 'VARIANT') {
-            const gridArray = componentProps.value.split('|');
 
-            // Collect content inside of the RowGrid component
-            frameLevel2.children.map((childFrame, col) => {
-              if (childFrame.type === 'INSTANCE') {
-                let weight = Math.floor((gridArray[col] / 12) * 100);
-                let res = collectPrimitive({
-                  frame: childFrame,
-                  fieldId, elementCounter, col, row, weight,
-                  formPrefix, tenantId, formTemplateId
-                });
-                response.fields.push(res.currentField);
-                response.templates.push(res.currentTemplate);
-                fieldId += 1;
-              } else {
-                console.error('ERROR. Shoul be a component instance or variant.')
-              }
-            });
-          } else {
-            console.error('ERROR. Wrong RowGrid format. Should be Variant.');
-          }
-        } else {
-          console.log('This is probably fullWidth primitive.');
-        }
-
-      } else if (frameLevel2.type === 'FRAME') {
-        if (frameLevel2.name === 'Group') {
-
-
-
-          response.fields.push('-- start group');
-          response.templates.push('-- start group');
-          let templateId = generateUUID();
-          let currentField = `${fieldId}, ${formPrefix + '_' + 'r' + elementCounter + '_' + 'group'}, '', 'group', ${tenantId}, null`;
-          let currentTemplate = `'${templateId}', ${formTemplateId}, ${row},  1, 100, ${fieldId}, true, 'group', null, ${tenantId}`;
-          fieldId += 1;
-          response.fields.push(currentField);
-          response.templates.push(currentTemplate);
-
-
-          
-        }
-      } else {
-        console.error('ERROR. Wrong element type. Should always be a FRAME')
-      }
-    });
-
-
+    const { resp, fieldId: innerFieldId } = recursiveOne({ element: currentForm, params, elementCounter, fieldId });
+    fieldId = innerFieldId;
+    return resp;
 
   } else {
     response.fields = ['Please select correct form element'];
