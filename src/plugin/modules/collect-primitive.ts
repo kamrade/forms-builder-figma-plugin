@@ -1,16 +1,9 @@
 import { generateUUID } from './generate-uuid';
+import { type ICollectPrimitiveProps } from './collect-primitive.props';
 
-export const collectPrimitive = (
-  frame: InstanceNode,
-  fieldId: number,
-  formPrefix: string,
-  elementCounter: number,
-  tenantId: string,
-  col: number,
-  weight: number,
-  row: number,
-  formTemplateId: string
-) => {
+export const collectPrimitive = (props: ICollectPrimitiveProps) => {
+  const {frame, fieldId, formPrefix, elementCounter, tenantId, col, weight, row, formTemplateId } = props;
+  
   let fieldType = frame.mainComponent.parent.name.substring(12);
   let label = '';
 
@@ -19,12 +12,9 @@ export const collectPrimitive = (
       label = (fieldContentEl as TextNode).characters;
     }
   });
-
-  let currentField = `${fieldId}, '${
-    formPrefix + '_' + 'r' + elementCounter + '_' + fieldType
-  }', '${label}', '${fieldType}', ${tenantId}, null`;
-
   let templateId = generateUUID();
+
+  let currentField = `${fieldId}, '${formPrefix + '_' + 'r' + elementCounter + '_' + fieldType}', '${label}', '${fieldType}', ${tenantId}, null`;
   let currentTemplate = `'${templateId}', ${formTemplateId}, ${row},  ${col}, ${weight}, ${fieldId}, false, 'primitive', null, ${tenantId}`;
 
   return { currentField, currentTemplate };
