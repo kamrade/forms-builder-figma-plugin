@@ -34,6 +34,8 @@ export const companyInformation = `
       (20027, 'ci_company_information_v2_r28_text', 'City', 'text', 3, null),
       (20028, 'ci_company_information_v2_r29_selector', 'Country', 'selector', 3, 'country'),
       (20029, 'ci_company_information_v2_r30_text', 'Postcode', 'text', 3, null),
+      
+      -- Shareholders
       (20030, 'ci_company_information_v2_r31_title', 'Shareholders', 'subtitle', 3, null),
       (20031, 'ci_company_information_v2_r32_description', 'In the event there is a corporate entity within your shareholder structure with a shareholding equal to or greater than 25%, we require all documents listed in the document checklist to be provided in support of this application. Ultimate beneficial owners should be listed here', 'description', 3, null),
       (20032, 'ci_company_information_v2_r33_list', '', 'list', 3, null),
@@ -54,6 +56,8 @@ export const companyInformation = `
       (20047, 'ci_company_information_v2_r48_selector', 'Country', 'selector', 3, 'country'),
       (20048, 'ci_company_information_v2_r49_text', 'Postcode', 'text', 3, null),
       (20049, 'ci_company_information_v2_r50_text', 'Name', 'text', 3, null),
+      
+      -- Officers
       (20050, 'ci_company_information_v2_r51_title', 'Officers', 'subtitle', 3, null),
       (20051, 'ci_company_information_v2_r52_description', 'Please provide the information below for directors and authorised signatories of the company.', 'description', 3, null),
       (20052, 'ci_company_information_v2_r53_list', '', 'list', 3, null),
@@ -115,6 +119,7 @@ export const companyInformation = `
       ('79a2b11f-95b2-47f4-bb99-3c239306251c', 610, 3, 1, 33, 20020, false, 'primitive', '8ba004e4-594c-4363-b25c-15f8d9f13b90', 3),
       ('4824a8cc-5bc8-47a9-9e88-24c861298bff', 610, 3, 2, 33, 20021, false, 'primitive', '8ba004e4-594c-4363-b25c-15f8d9f13b90', 3),
       ('901f36ba-6cb4-4baf-aae8-aae194f826d7', 610, 3, 3, 33, 20022, false, 'primitive', '8ba004e4-594c-4363-b25c-15f8d9f13b90', 3),
+      
       -- Trading Address
       ('08d57a6d-5b09-424c-883a-6ec695142dc0', 610, 8, 1, 100, 20023, true, 'group', null, 3),
       ('5a6d8239-8b67-4bae-b824-2d906f11e5bc', 610, 1, 1, 100, 20024, false, 'primitive', '08d57a6d-5b09-424c-883a-6ec695142dc0', 3),
@@ -123,6 +128,7 @@ export const companyInformation = `
       ('01ca20b5-1695-4582-bc00-340541d8a803', 610, 4, 1, 33, 20027, false, 'primitive', '08d57a6d-5b09-424c-883a-6ec695142dc0', 3),
       ('998e4585-a5b5-4ef9-ab31-86a36bcfd5fe', 610, 4, 2, 33, 20028, false, 'primitive', '08d57a6d-5b09-424c-883a-6ec695142dc0', 3),
       ('ada9ac7c-27cb-4760-8e6e-489cb130abd9', 610, 4, 3, 33, 20029, false, 'primitive', '08d57a6d-5b09-424c-883a-6ec695142dc0', 3),
+      
       -- Shareholders
       ('3fcabfe3-03ac-404d-b475-50cf9fed7e41', 610, 9, 1, 100, 20030, false, 'primitive', null, 3),
       ('307b85f6-93a2-4ce7-8e09-f217024120d7', 610, 10, 1, 100, 20031, false, 'primitive', null, 3),
@@ -144,6 +150,7 @@ export const companyInformation = `
       ('911b97c2-2c49-4c3e-a3f3-e83495a77b30', 610, 8, 2, 33, 20047, false, 'primitive', '9c30d793-0e78-4c94-a462-82b950c389d3', 3),
       ('9e2254a4-63af-4854-8351-d860b9ef4827', 610, 8, 3, 33, 20048, false, 'primitive', '9c30d793-0e78-4c94-a462-82b950c389d3', 3),
       ('b8ce39da-d69b-45fe-bf36-d0ebe5191052', 610, 9, 1, 100, 20049, false, 'primitive', '9c30d793-0e78-4c94-a462-82b950c389d3', 3),
+      
       -- Officers
       ('bf421e85-16a9-4520-a3fd-960b7835f2bf', 610, 12, 1, 100, 20050, false, 'primitive', null, 3),
       ('784b0398-aff0-4849-a390-ee45bb0411d7', 610, 13, 1, 100, 20051, false, 'primitive', null, 3),
@@ -165,6 +172,7 @@ export const companyInformation = `
       ('2b75f78a-32a6-4ffd-bbf8-12a0ff316d3a', 610, 8, 1, 100, 20067, false, 'primitive', '92d21005-492a-4486-a257-4f8553732f5d', 3),
       ('fdb6cd9a-4767-46a3-bd2b-821b88f33ebe', 610, 9, 1, 50, 20068, false, 'primitive', '92d21005-492a-4486-a257-4f8553732f5d', 3),
       ('6f6aac18-9165-470c-88c8-4b092605f8f0', 610, 9, 2, 50, 20069, false, 'primitive', '92d21005-492a-4486-a257-4f8553732f5d', 3),
+      
       -- PEP self certification
       ('5ad33bb6-45ca-4d1b-90a1-25320ee34fb9', 610, 15, 1, 100, 20070, false, 'primitive', null, 3),
       ('56c74f4a-27cb-456c-9265-5184db067f2c', 610, 16, 1, 100, 20071, false, 'primitive', null, 3),

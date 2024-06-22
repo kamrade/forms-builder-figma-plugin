@@ -10,21 +10,22 @@ export interface IScanFormParams {
 
 export function scanForm(params: IScanFormParams) {
   const { currentForm, startingFieldId } = params;
-  let response = { fields: [], templates: [] };
-  
-  let fieldId = startingFieldId;
-  let elementCounter = 1;
 
   if (currentForm.type === 'FRAME') {
 
-    const { resp, fieldId: innerFieldId } = recursiveOne({ element: currentForm, params, elementCounter, fieldId });
-    fieldId = innerFieldId;
-    return resp;
+    const { res: result } = recursiveOne({ 
+      element: currentForm, 
+      elementCounter: 1, 
+      fieldId: startingFieldId, 
+      fields: [], 
+      templates : [],
+
+      params, 
+    });
+
+    return result;
 
   } else {
-    response.fields = ['Please select correct form element'];
-    response.templates = [];
+    return { fields: ['Please select correct form element'], templates: [] };
   }
-
-  return response;
 }

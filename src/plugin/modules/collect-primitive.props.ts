@@ -11,4 +11,6 @@ export interface ICollectPrimitiveProps {
   formPrefix: string,
   tenantId: string,
   formTemplateId: string
+
+  parentId?: string;
 }

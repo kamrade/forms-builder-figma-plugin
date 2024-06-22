@@ -3,7 +3,7 @@ import { SCAN_FORMS, FORMS_SCANING_COMPLETE, SELECTION_CHANGED } from '../const/
 import { scanForm } from './modules/scan-form';
 
 figma.showUI(__html__);
-figma.ui.resize(900, 600);
+figma.ui.resize(1000, 620);
 
 figma.currentPage.selection = [];
 
@@ -25,7 +25,13 @@ figma.ui.onmessage = (msg) => {
   if (type === SCAN_FORMS) {
     const currentSelection: readonly SceneNode[] = figma.currentPage.selection;
 
-    let result = scanForm({ currentForm: currentSelection[0], startingFieldId, tenantId, formPrefix, formTemplateId });
+    let result = scanForm({ 
+      currentForm: currentSelection[0], 
+      startingFieldId,
+      tenantId,
+      formPrefix,
+      formTemplateId
+    });
 
     figma.ui.postMessage({
       type: FORMS_SCANING_COMPLETE,

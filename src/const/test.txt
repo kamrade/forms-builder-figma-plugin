@@ -1,0 +1,66 @@
+INSERT INTO field(id, name, title, type, tenant_id, selector_id) VALUES
+
+18100, 'opt_company_information_form_r1_text', 'Legal Entity Name', 'text', 3, null
+18101, 'opt_company_information_form_r2_text', 'Trading Name (if different)', 'text', 3, null
+18102, 'opt_company_information_form_r3_group', '', 'group', 3, null
+18103, 'opt_company_information_form_r4_text', 'First name', 'text', 3, null
+18104, 'opt_company_information_form_r5_text', 'Middle name', 'text', 3, null
+18105, 'opt_company_information_form_r6_text', 'Last name', 'text', 3, null
+18106, 'opt_company_information_form_r7_text', 'Position in company', 'text', 3, null
+18107, 'opt_company_information_form_r8_text', 'Email address', 'text', 3, null
+18108, 'opt_company_information_form_r9_text', 'Primary Contact Name', 'text', 3, null
+-- Text Node
+18109, 'opt_company_information_form_r10_subtitle', '', subtitle, 3, null
+-- Text Node
+18110, 'opt_company_information_form_r11_description', '', description, 3, null
+18111, 'opt_company_information_form_r12_list', '', 'group', 3, null
+-- Text Node
+18112, 'opt_company_information_form_r13_subtitle', '', subtitle, 3, null
+18113, 'opt_company_information_form_r14_select', 'Type', 'select', 3, null
+18114, 'opt_company_information_form_r15_text', '% Shareholding', 'text', 3, null
+18115, 'opt_company_information_form_r16_text', 'First Name', 'text', 3, null
+18116, 'opt_company_information_form_r17_text', 'Middle Name', 'text', 3, null
+18117, 'opt_company_information_form_r18_text', 'Last Name', 'text', 3, null
+18118, 'opt_company_information_form_r19_date', 'Date of Birth', 'date', 3, null
+18119, 'opt_company_information_form_r20_select', 'Nationality', 'select', 3, null
+18120, 'opt_company_information_form_r21_text', 'Place of Birth', 'text', 3, null
+18121, 'opt_company_information_form_r22_text', 'Passport/ID number', 'text', 3, null
+18122, 'opt_company_information_form_r23_select', 'Position in Company', 'select', 3, null
+18123, 'opt_company_information_form_r24_textarea', 'Address', 'textarea', 3, null
+18124, 'opt_company_information_form_r25_text', 'City', 'text', 3, null
+18125, 'opt_company_information_form_r26_select', 'Country', 'select', 3, null
+18126, 'opt_company_information_form_r27_text', 'Postcode', 'text', 3, null
+-- Shoud be a Button with a label: Add shareholder
+---
+INSERT INTO form_template_field(id, form_template_id, row, col, weight, field_id, is_container, "type", parent, tenant_id) VALUES
+'147ad1ef-fba1-4600-8a0c-15d9285ba8a7', 410, 1, 0, 50, 18100, false, 'primitive', null3,
+'9a752f48-edce-4b0d-9e6e-3dbcae2d5863', 410, 1, 1, 50, 18101, false, 'primitive', null3,
+'1623cc3f-1abe-4596-8293-5e2609de75a4', 410, 2, 1, 100, 18102, true, 'group', null, 3
+'00f238ef-9cbd-4b9d-a13c-088362f7d0f4', 410, 1, 0, 33, 18103, false, 'primitive', 1623cc3f-1abe-4596-8293-5e2609de75a43,
+'8389f6c7-2b04-4fb3-bb02-c534988c659d', 410, 1, 1, 33, 18104, false, 'primitive', 1623cc3f-1abe-4596-8293-5e2609de75a43,
+'0d4b7f0c-1868-41ed-a0ca-13f5a1cf86e9', 410, 1, 2, 33, 18105, false, 'primitive', 1623cc3f-1abe-4596-8293-5e2609de75a43,
+'05169a09-488b-42d9-a02c-6c78e524a485', 410, 2, 0, 50, 18106, false, 'primitive', 1623cc3f-1abe-4596-8293-5e2609de75a43,
+'3e7cf345-d345-4f33-9510-73a19d24cf16', 410, 2, 1, 50, 18107, false, 'primitive', 1623cc3f-1abe-4596-8293-5e2609de75a43,
+'ce04d37f-d26c-4ce9-9acf-82892ce1ff3f', 410, 3, 0, 100, 18108, false, 'primitive', null3,
+-- Text Node
+'7a10550b-de39-405a-9b10-a0d7cea05505', 410, 4, 1, 100, 18109, true, subtitle, null, 3
+-- Text Node
+'e10efe12-c4e1-40b3-967d-1f815baa6b7b', 410, 5, 1, 100, 18110, true, description, null, 3
+'3cba2035-175b-404c-857a-2324a30d2f0e', 410, 6, 1, 100, 18111, true, 'group', null, 3
+-- Text Node
+'531512e8-aeb1-45d7-8f8b-804b04d1c875', 410, 1, 1, 100, 18112, true, subtitle, null, 3
+'1d33d035-16a1-46fb-a72b-09edf1e2dd82', 410, 2, 0, 50, 18113, false, 'primitive', 3cba2035-175b-404c-857a-2324a30d2f0e3,
+'4d23b63b-62c0-42bd-a2a7-fdd0759e7f10', 410, 2, 1, 50, 18114, false, 'primitive', 3cba2035-175b-404c-857a-2324a30d2f0e3,
+'8b15bb6d-fb24-4f1c-81f5-a8bcf64cf836', 410, 3, 0, 33, 18115, false, 'primitive', 3cba2035-175b-404c-857a-2324a30d2f0e3,
+'9a38f866-88c8-4983-b4ad-9f021be5fcca', 410, 3, 1, 33, 18116, false, 'primitive', 3cba2035-175b-404c-857a-2324a30d2f0e3,
+'67f52aea-d488-4573-bfcf-f7f8e1619fe4', 410, 3, 2, 33, 18117, false, 'primitive', 3cba2035-175b-404c-857a-2324a30d2f0e3,
+'eb7cc559-6b89-41db-809d-d16e192bdabc', 410, 4, 0, 33, 18118, false, 'primitive', 3cba2035-175b-404c-857a-2324a30d2f0e3,
+'8adcb454-6297-45bc-aaff-c8588be9b4f2', 410, 4, 1, 33, 18119, false, 'primitive', 3cba2035-175b-404c-857a-2324a30d2f0e3,
+'71227c64-dc23-40be-b02b-057c78f2db29', 410, 4, 2, 33, 18120, false, 'primitive', 3cba2035-175b-404c-857a-2324a30d2f0e3,
+'f12d1763-9fa8-4162-b0cf-93670e6f6287', 410, 5, 0, 50, 18121, false, 'primitive', 3cba2035-175b-404c-857a-2324a30d2f0e3,
+'c6c35907-6381-45f7-ac17-2b7142533f2e', 410, 5, 1, 50, 18122, false, 'primitive', 3cba2035-175b-404c-857a-2324a30d2f0e3,
+'1209518d-b911-4e38-96e0-43f371d897f6', 410, 6, 0, 100, 18123, false, 'primitive', 3cba2035-175b-404c-857a-2324a30d2f0e3,
+'06e6c36c-7a7c-43c4-bc0a-e2ca17ee5261', 410, 7, 0, 33, 18124, false, 'primitive', 3cba2035-175b-404c-857a-2324a30d2f0e3,
+'fd4adebf-6efa-4d9c-af0c-5c5948f872cf', 410, 7, 1, 33, 18125, false, 'primitive', 3cba2035-175b-404c-857a-2324a30d2f0e3,
+'d0c0b748-bf9f-4d97-bcc1-932722420fe9', 410, 7, 2, 33, 18126, false, 'primitive', 3cba2035-175b-404c-857a-2324a30d2f0e3,
+-- Shoud be a Button with a label: Add shareholder

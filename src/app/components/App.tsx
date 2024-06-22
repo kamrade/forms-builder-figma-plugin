@@ -109,9 +109,12 @@ function App() {
 
       <div className="logs">
         {logs?.map((log, i) => (
-          <p className="log" key={i}>
-            {log}
-          </p>
+          <span key={i}>
+            <span className="log" key={i}>
+              {log}
+            </span>
+            <br/>
+          </span>
         ))}
       </div>
     </div>
