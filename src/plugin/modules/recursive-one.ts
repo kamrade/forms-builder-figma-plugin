@@ -100,9 +100,7 @@ export const recursiveOne = (props: IRecursiveProps) => {
           parentId: parentId ? parentId : 'null'
         });
         
-        innerFields.push(`-- Text Node`);
         innerFields.push(field);
-        innerTemplates.push(`-- Text Node`);
         innerTemplates.push(template);
         innerFieldId += 1;
         innerCounter += 1;

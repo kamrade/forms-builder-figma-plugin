@@ -10,7 +10,7 @@ figma.currentPage.selection = [];
 figma.on('selectionchange', () => {
   const currentSelection: readonly SceneNode[] = figma.currentPage.selection;
   const validSelection = currentSelection.length === 1;
-  let message = validSelection ? 'SELECTION: ' + currentSelection[0].name : 'Please choose one frame on the page';
+  let message = validSelection ? 'SELECTION: ' + currentSelection[0].name : 'Choose a Frame';
 
   figma.ui.postMessage({
     type: SELECTION_CHANGED,

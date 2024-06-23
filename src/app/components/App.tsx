@@ -13,7 +13,6 @@ function App() {
   const addMessage = (message: string) => setLogs((l) => [...l, message]);
 
   useEffect(() => {
-    addMessage('Choose the form frame please');
 
     window.onmessage = (event: MessageEvent) => {
       const { type, message, validSelection } = event.data.pluginMessage;
@@ -24,11 +23,12 @@ function App() {
       }
 
       if (type === FORMS_SCANING_COMPLETE) {
-        addMessage('::: Scan Completed');
         addMessage(preTextField);
         message.result.fields.map((field: string) => setLogs((l) => [...l, field]));
 
-        addMessage('---');
+        addMessage('--');
+        addMessage('--');
+        addMessage('--');
         addMessage(preTextTemplate);
         message.result.templates.map((template: string) => setLogs((l) => [...l, template]));
       }
@@ -50,7 +50,6 @@ function App() {
     const tenantId = formFields.tenant_id.value;
     const formPrefix = formFields.form_prefix.value;
     const formTemplateId = formFields.form_template_id.value;
-    setLogs((l) => [...l, `::: Scaning...`]);
     if (selectionIsValid) {
       scanForms(startingFieldId, tenantId, formPrefix, formTemplateId);
     } else {
@@ -72,6 +71,14 @@ function App() {
       '*'
     );
   };
+
+  const getLogClassName = (log: string) => {
+    let className = 'log ';
+    className += log.includes('subtitle') || log.includes('description') ? 'log-text ' : '';
+    className += log.includes("'group'") || log.includes("'complex'") ? 'log-group ' : '';
+    className += log.includes('-- ') ? 'log-comment ' : '';
+    return className;
+  }
 
   return (
     <div className="page">
@@ -110,9 +117,11 @@ function App() {
       <div className="logs">
         {logs?.map((log, i) => (
           <span key={i}>
-            <span className="log" key={i}>
+            
+            <span className={getLogClassName(log)} key={i}>
               {log}
             </span>
+
             <br/>
           </span>
         ))}

@@ -49,7 +49,20 @@ body {
   margin-top: 0.25rem;
 }
 
-.logs > .log {
+.logs .log {
   margin: 0;
   padding: 0.25rem 0;
+  opacity: 1;
+}
+
+.logs .log-text {
+ opacity: .8 
+}
+
+.logs .log-group {
+  opacity: .5;
+}
+
+.logs .log-comment {
+  opacity: .25;
 }
