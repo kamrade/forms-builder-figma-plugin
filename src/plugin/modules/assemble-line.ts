@@ -15,10 +15,12 @@ export interface IAssembleLineProps {
   parentId: string | null;        // var : possible null
 }
 
+/*
 // FIELD:
 // id, name, title, type, tenant_id, selector_id
 // TEMPLATE:
 // id, form_template_id, row, col, weight, field_id, is_container, "type", parent, tenant_id
+*/
 
 const primitiveOrComplex = (fieldType) => {
   const complex = ['group', 'list', 'complex', 'key-value', 'key', 'value'];

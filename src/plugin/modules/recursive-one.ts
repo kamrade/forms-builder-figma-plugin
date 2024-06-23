@@ -23,7 +23,13 @@ export const recursiveOne = (props: IRecursiveProps) => {
   let innerCounter = elementCounter;
 
   element.children.map((frameLevel2, row) => {
+
+
+    //- Instance
     if (frameLevel2.type === 'INSTANCE') {
+
+
+      //-- RowGrid
       if (frameLevel2.mainComponent?.parent?.name === 'RowGrid') {
         const componentProps: any = frameLevel2.componentProperties.type;
         if (componentProps.type === 'VARIANT') {
@@ -55,15 +61,16 @@ export const recursiveOne = (props: IRecursiveProps) => {
               innerCounter += 1;
               
             } else {
-              // ERROR. Should be a component instance or variant.
+              //---- ERROR. Should be a component instance or variant.
             }
           });
         } else {
-          // ERROR. Wrong RowGrid format. Should be Variant.
+          //--- ERROR. Wrong RowGrid format. Should be Variant.
         }
+
+
+      //-- Button
       } else if (frameLevel2.mainComponent.parent?.name) {
-        
-        //--- Button
         if (frameLevel2.mainComponent.parent?.name.substring(0, 6) === "Button") {
           const labelText = (frameLevel2.children.filter((item, _i) => item.name === 'Button label') as TextNode[])[0].characters;
           innerFields.push(`-- Shoud be a Button with a label: ${labelText}`);
@@ -72,28 +79,38 @@ export const recursiveOne = (props: IRecursiveProps) => {
           innerFields.push(`-- Unknown Instance`);
           innerTemplates.push(`-- Unknown Instance`);
         }
-        
+
+
+      //-- Text field (subtitle, description)
       } else if(frameLevel2.mainComponent.name.substring(0, 9) === 'FormField') {
+        const { field, template } = assembleLine({
+          fieldId: innerFieldId,
+          formPrefix,
+          counter: innerCounter,
+          fieldType: frameLevel2.name.substring(12).toLowerCase(),
+          label: (frameLevel2.children.filter((item, _i) => item.name === '> text-content') as TextNode[])[0].characters,
+          tenantId,
+          selectorId: null,
+          templateId: generateUUID(), 
+          formTemplateId,
+          row,
+          col: 1, // always 1 tow
+          weight: 100, // always 100%
+          isContainer: false,
+          parentId: parentId ? parentId : 'null'
+        });
         
-        //--- Text field (subtitle, description)
-        const fieldType = frameLevel2.name.substring(12).toLowerCase();
-        const templateId = generateUUID();
-        const textContent = (frameLevel2.children.filter((item, _i) => item.name === '> text-content') as TextNode[])[0].characters;
-        const textField = `${innerFieldId}, '${formPrefix + '_' + 'r' + innerCounter + '_' + textContent}', '', ${fieldType}, ${tenantId}, null`;
-        const textTemplate = `'${templateId}', ${formTemplateId}, ${row+1},  1, 100, ${innerFieldId}, true, ${fieldType}, null, ${tenantId}`;
         innerFields.push(`-- Text Node`);
-        innerFields.push(textField);
+        innerFields.push(field);
         innerTemplates.push(`-- Text Node`);
-        innerTemplates.push(textTemplate);
+        innerTemplates.push(template);
         innerFieldId += 1;
         innerCounter += 1;
-
       }
-    } else if (frameLevel2.type === 'FRAME') {
 
-      // console.log( frameLevel2?.name );
-      
-      //--- Group, list, complex fields
+
+    //- Group, Complex(List+Comples)
+    } else if (frameLevel2.type === 'FRAME') {
       if (frameLevel2?.name === 'Group' || frameLevel2?.name === 'Complex') {
 
         const blockType = frameLevel2.name.toLowerCase();
