@@ -1,6 +1,6 @@
 import { IScanFormParams } from './scan-form';
-import { collectPrimitive } from './collect-primitive';
 import { generateUUID } from './generate-uuid';
+import { assembleLine } from './assemble-line';
 
 export interface IRecursiveProps {
   element: FrameNode;
@@ -32,16 +32,25 @@ export const recursiveOne = (props: IRecursiveProps) => {
             if (childFrame.type === 'INSTANCE') {
 
               // Primitive field (text, select, date, textarea, multi-select, multi-text, checkbox, radio)
-              let weight = Math.floor((gridArray[col] / 12) * 100);
-
-              let res = collectPrimitive({
-                frame: childFrame,
-                fieldId: innerFieldId, elementCounter: innerCounter, col, row, weight,
-                formPrefix, tenantId, formTemplateId, parentId
+              const { field, template } = assembleLine({
+                fieldId: innerFieldId,
+                formPrefix,
+                counter: innerCounter,
+                fieldType: childFrame.mainComponent.parent.name.substring(12),
+                label: (childFrame.children.find((fieldContentEl: SceneNode) => fieldContentEl.name === '> label') as TextNode).characters,
+                tenantId,
+                selectorId: null,
+                templateId: generateUUID(), 
+                formTemplateId,
+                row,
+                col,
+                weight: Math.floor((gridArray[col] / 12) * 100),
+                isContainer: false,
+                parentId: parentId ? parentId : 'null'
               });
 
-              innerFields.push(res.currentField);
-              innerTemplates.push(res.currentTemplate);
+              innerFields.push(field);
+              innerTemplates.push(template);
               innerFieldId += 1;
               innerCounter += 1;
               
@@ -54,7 +63,7 @@ export const recursiveOne = (props: IRecursiveProps) => {
         }
       } else if (frameLevel2.mainComponent.parent?.name) {
         
-        // Button
+        //--- Button
         if (frameLevel2.mainComponent.parent?.name.substring(0, 6) === "Button") {
           const labelText = (frameLevel2.children.filter((item, _i) => item.name === 'Button label') as TextNode[])[0].characters;
           innerFields.push(`-- Shoud be a Button with a label: ${labelText}`);
@@ -66,10 +75,11 @@ export const recursiveOne = (props: IRecursiveProps) => {
         
       } else if(frameLevel2.mainComponent.name.substring(0, 9) === 'FormField') {
         
-        // Text field (subtitle, description)
+        //--- Text field (subtitle, description)
         const fieldType = frameLevel2.name.substring(12).toLowerCase();
         const templateId = generateUUID();
-        const textField = `${innerFieldId}, '${formPrefix + '_' + 'r' + innerCounter + '_' + fieldType}', '', ${fieldType}, ${tenantId}, null`;
+        const textContent = (frameLevel2.children.filter((item, _i) => item.name === '> text-content') as TextNode[])[0].characters;
+        const textField = `${innerFieldId}, '${formPrefix + '_' + 'r' + innerCounter + '_' + textContent}', '', ${fieldType}, ${tenantId}, null`;
         const textTemplate = `'${templateId}', ${formTemplateId}, ${row+1},  1, 100, ${innerFieldId}, true, ${fieldType}, null, ${tenantId}`;
         innerFields.push(`-- Text Node`);
         innerFields.push(textField);
@@ -80,19 +90,39 @@ export const recursiveOne = (props: IRecursiveProps) => {
 
       }
     } else if (frameLevel2.type === 'FRAME') {
-      // Group, list, complex fields
-      if (frameLevel2?.name === 'Group' || frameLevel2?.name === 'List') {
 
-        const blockType = frameLevel2.name;
+      // console.log( frameLevel2?.name );
+      
+      //--- Group, list, complex fields
+      if (frameLevel2?.name === 'Group' || frameLevel2?.name === 'Complex') {
+
+        const blockType = frameLevel2.name.toLowerCase();
         const templateId = generateUUID();
 
-        const groupField = `${innerFieldId}, '${formPrefix + '_' + 'r' + innerCounter + '_' + blockType.toLowerCase()}', '', 'group', ${tenantId}, null`;
-        const groupTemplate = `'${templateId}', ${formTemplateId}, ${row+1},  1, 100, ${innerFieldId}, true, 'group', null, ${tenantId}`;
+        const { field, template } = assembleLine({
+          fieldId: innerFieldId,
+          formPrefix,
+          counter: innerCounter,
+          fieldType: blockType,
+          label: '',
+          tenantId,
+          selectorId: null,
+          templateId, 
+          formTemplateId,
+          row,
+          col: 1,
+          weight: 100,
+          isContainer: false,
+          parentId: parentId ? parentId : 'null'
+        });
+
         innerFieldId += 1;
         innerCounter += 1;
-
-        innerFields.push(groupField);
-        innerTemplates.push(groupTemplate);
+        
+        innerFields.push(`-- Block: ${blockType}`);
+        innerFields.push(field);
+        innerTemplates.push(`-- Block: ${blockType}`);
+        innerTemplates.push(template);
 
         const groupResult: any = recursiveOne({ 
           element: frameLevel2, 
