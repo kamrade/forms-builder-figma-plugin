@@ -12,6 +12,22 @@ export interface IRecursiveProps {
   parentId?: string;
 }
 
+/*
+// Checkbox has a bit different structure.
+// This function helps to find checkbox label.
+*/
+export const getElementLabel = (frame: SceneNode) => {
+  const labelEl = (frame as FrameNode)?.children.find((childEl) => childEl.name === '> label' || childEl.name === '> label block');
+  
+  if (labelEl.name === '> label') {
+    return (labelEl as TextNode).characters;
+  } else if (labelEl.name === '> label block') {
+    const labelText = (labelEl as FrameNode).children.find((label: SceneNode) => label.name === '> label');
+    return (labelText as TextNode).characters;
+  }
+
+}
+
 export const recursiveOne = (props: IRecursiveProps) => {
   
   const { element, elementCounter, fieldId, fields, templates, parentId } = props;
@@ -35,15 +51,16 @@ export const recursiveOne = (props: IRecursiveProps) => {
         if (componentProps.type === 'VARIANT') {
           const gridArray = componentProps.value.split('|');
           frameLevel2.children.map((childFrame, col) => {
-            if (childFrame.type === 'INSTANCE') {
 
-              // Primitive field (text, select, date, textarea, multi-select, multi-text, checkbox, radio)
+            if (childFrame.type === 'INSTANCE') {
+              //>>> Primitive field (text, select, date, textarea, multi-select, multi-text, checkbox, radio)
+              
               const { field, template } = assembleLine({
                 fieldId: innerFieldId,
                 formPrefix,
                 counter: innerCounter,
-                fieldType: childFrame.mainComponent.parent.name.substring(12),
-                label: (childFrame.children.find((fieldContentEl: SceneNode) => fieldContentEl.name === '> label') as TextNode).characters,
+                fieldType: childFrame.mainComponent.parent ? childFrame.mainComponent.parent.name.substring(12) : childFrame.mainComponent.name.substring(12),
+                label: getElementLabel(childFrame),
                 tenantId,
                 selectorId: null,
                 templateId: generateUUID(), 
@@ -59,6 +76,8 @@ export const recursiveOne = (props: IRecursiveProps) => {
               innerTemplates.push(template);
               innerFieldId += 1;
               innerCounter += 1;
+
+              
               
             } else {
               //---- ERROR. Should be a component instance or variant.
@@ -81,7 +100,7 @@ export const recursiveOne = (props: IRecursiveProps) => {
         }
 
 
-      //-- Text field (subtitle, description)
+      //-- >>> Text field (subtitle, description)
       } else if(frameLevel2.mainComponent.name.substring(0, 9) === 'FormField') {
         const { field, template } = assembleLine({
           fieldId: innerFieldId,
@@ -107,9 +126,9 @@ export const recursiveOne = (props: IRecursiveProps) => {
       }
 
 
-    //- Group, Complex(List+Comples)
+    //-  >>> Group, Complex(List+Comples)
     } else if (frameLevel2.type === 'FRAME') {
-      if (frameLevel2?.name === 'Group' || frameLevel2?.name === 'Complex') {
+      if (frameLevel2?.name === 'Group' || frameLevel2?.name === 'List') {
 
         const blockType = frameLevel2.name.toLowerCase();
         const templateId = generateUUID();
@@ -139,6 +158,31 @@ export const recursiveOne = (props: IRecursiveProps) => {
         innerTemplates.push(`-- Block: ${blockType}`);
         innerTemplates.push(template);
 
+        if (blockType === 'list') {
+          const { field, template } = assembleLine({
+            fieldId: innerFieldId,
+            formPrefix,
+            counter: innerCounter,
+            fieldType: 'complex',
+            label: '',
+            tenantId,
+            selectorId: null,
+            templateId: generateUUID(),
+            formTemplateId,
+            row,
+            col: 1,
+            weight: 100,
+            isContainer: false,
+            parentId: parentId ? parentId : 'null'
+          });
+
+          innerFieldId += 1;
+          innerCounter += 1;
+          
+          innerFields.push(field);
+          innerTemplates.push(template);
+        }
+
         const groupResult: any = recursiveOne({ 
           element: frameLevel2, 
           params: props.params, 
@@ -151,6 +195,8 @@ export const recursiveOne = (props: IRecursiveProps) => {
         
         innerFields = [...groupResult.res.fields];
         innerTemplates = [...groupResult.res.templates];
+        innerFields.push(`-- End of the ${blockType}`);
+        innerTemplates.push(`-- End of the ${blockType}`);
         innerCounter = groupResult.counter;
         innerFieldId = groupResult.fieldId;
       }

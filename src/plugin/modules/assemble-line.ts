@@ -28,14 +28,17 @@ const primitiveOrComplex = (fieldType) => {
 }
 
 export const assembleLine = (p: IAssembleLineProps) => {
-  let field = `${p.fieldId}, `;
+  let field = `(`;
+  field    += `${p.fieldId}, `;
   field    += `'${p.formPrefix}_r${p.counter}_${p.fieldType}', `;
   field    += `'${p.label}', `;
   field    += `'${p.fieldType}', `;
   field    += p.tenantId + ', ';
   field    += p.selectorId ? `'${p.selectorId}'` : 'null';
+  field    += `)`;
 
-  let template = `'${p.templateId}', `;
+  let template = `(`;
+  template += `'${p.templateId}', `;
   template += p.formTemplateId + ', ';
   template += `${p.row+1}, ${p.col}, ${p.weight}, `;
   template += p.fieldId + ', ';
@@ -43,6 +46,7 @@ export const assembleLine = (p: IAssembleLineProps) => {
   template += `'${primitiveOrComplex(p.fieldType)}', `;
   template += `'${p.parentId ? p.parentId : 'null'}', `;
   template += p.tenantId + ', ';
+  template += `)`;
 
   return { field, template };
 };

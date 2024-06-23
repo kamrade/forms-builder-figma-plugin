@@ -35,9 +35,9 @@ function App() {
     };
 
     const formElements = document.forms['default_values_form'].elements;
-    formElements['starting_field_id'].value = 18100;
+    formElements['starting_field_id'].value = 20000;
     formElements['tenant_id'].value = '3';
-    formElements['form_prefix'].value = 'opt_company_information_form';
+    formElements['form_prefix'].value = 'ci_company_information_form';
     formElements['form_template_id'].value = '410';
   }, []);
 
@@ -75,7 +75,7 @@ function App() {
   const getLogClassName = (log: string) => {
     let className = 'log ';
     className += log.includes('subtitle') || log.includes('description') ? 'log-text ' : '';
-    className += log.includes("'group'") || log.includes("'complex'") ? 'log-group ' : '';
+    className += log.includes("'group'") || log.includes("'complex'") || log.includes("'list'") ? 'log-group ' : '';
     className += log.includes('-- ') ? 'log-comment ' : '';
     return className;
   }
