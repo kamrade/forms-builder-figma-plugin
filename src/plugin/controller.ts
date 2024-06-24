@@ -5,19 +5,25 @@ import { scanForm } from './modules/scan-form';
 figma.showUI(__html__);
 figma.ui.resize(1000, 620);
 
-figma.currentPage.selection = [];
-
-figma.on('selectionchange', () => {
+const onSelectionChange = () => {
   const currentSelection: readonly SceneNode[] = figma.currentPage.selection;
   const validSelection = currentSelection.length === 1;
-  let message = validSelection ? 'SELECTION: ' + currentSelection[0].name : 'Choose a Frame';
+  let message = validSelection 
+    ? '-- SELECTION: ' + currentSelection[0].name
+    : currentSelection.length === 0
+      ? '-- Select single Frame'
+      : '-- Error: Select single Frame';
 
   figma.ui.postMessage({
     type: SELECTION_CHANGED,
     message,
     validSelection,
   });
-});
+}
+
+onSelectionChange();
+
+figma.on('selectionchange', onSelectionChange);
 
 figma.ui.onmessage = (msg) => {
   const { type, startingFieldId, tenantId, formPrefix, formTemplateId } = msg;
