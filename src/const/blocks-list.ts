@@ -28,6 +28,13 @@ export const blocksList = {
       'Address',
       'Phone',
       'Email'
+    ],
+    'Compliance Contact for Requests for Information': [
+      'First Name',
+      'Middle Name',
+      'Last Name',
+      'Posirtion in Company',
+      'Email Address'
     ]
 
   },

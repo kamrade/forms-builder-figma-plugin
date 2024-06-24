@@ -45,7 +45,7 @@ export const assembleLine = (p: IAssembleLineProps) => {
   template += `${p.isContainer ? 'true' : 'false'}, `
   template += `'${primitiveOrComplex(p.fieldType)}', `;
   template += `'${p.parentId ? p.parentId : 'null'}', `;
-  template += p.tenantId + ', ';
+  template += p.tenantId;
   template += `)`;
 
   return { field, template };

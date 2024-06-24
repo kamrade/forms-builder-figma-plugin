@@ -81,10 +81,14 @@ export const recursiveOne = (props: IRecursiveProps) => {
               
             } else {
               //---- ERROR. Should be a component instance or variant.
+              innerFields.push("-- Error: 04");
+              innerTemplates.push("-- Error: 04");
             }
           });
         } else {
           //--- ERROR. Wrong RowGrid format. Should be Variant.
+          innerFields.push("-- Error: 03");
+          innerTemplates.push("-- Error: 03");
         }
 
 
@@ -95,34 +99,41 @@ export const recursiveOne = (props: IRecursiveProps) => {
           innerFields.push(`-- Shoud be a Button with a label: ${labelText}`);
           innerTemplates.push(`-- Shoud be a Button with a label: ${labelText}`);
         } else {
-          innerFields.push(`-- Unknown Instance`);
-          innerTemplates.push(`-- Unknown Instance`);
+          innerFields.push(`-- Error: Unsupported Instance`);
+          innerTemplates.push(`-- Error: Unsupported Instance`);
         }
 
 
       //-- >>> Text field (subtitle, description)
       } else if(frameLevel2.mainComponent.name.substring(0, 9) === 'FormField') {
-        const { field, template } = assembleLine({
-          fieldId: innerFieldId,
-          formPrefix,
-          counter: innerCounter,
-          fieldType: frameLevel2.name.substring(12).toLowerCase(),
-          label: (frameLevel2.children.filter((item, _i) => item.name === '> text-content') as TextNode[])[0].characters,
-          tenantId,
-          selectorId: null,
-          templateId: generateUUID(), 
-          formTemplateId,
-          row,
-          col: 1, // always 1 tow
-          weight: 100, // always 100%
-          isContainer: false,
-          parentId: parentId ? parentId : 'null'
-        });
-        
-        innerFields.push(field);
-        innerTemplates.push(template);
-        innerFieldId += 1;
-        innerCounter += 1;
+
+        if (['subtitle', 'description'].includes(frameLevel2.mainComponent.name.substring(12))) {
+          const { field, template } = assembleLine({
+            fieldId: innerFieldId,
+            formPrefix,
+            counter: innerCounter,
+            fieldType: frameLevel2.name.substring(12).toLowerCase(),
+            label: (frameLevel2.children.filter((item, _i) => item.name === '> text-content') as TextNode[])[0].characters,
+            tenantId,
+            selectorId: null,
+            templateId: generateUUID(), 
+            formTemplateId,
+            row,
+            col: 1, // always 1 tow
+            weight: 100, // always 100%
+            isContainer: false,
+            parentId: parentId ? parentId : 'null'
+          });
+          
+          innerFields.push(field);
+          innerTemplates.push(template);
+          innerFieldId += 1;
+          innerCounter += 1;
+        } else {
+          // ERROR: Can't put form element without a wrapper
+          innerFields.push("-- Error: Only text form fields can be placed without a wrapper");
+          innerTemplates.push("-- Error: Only text form fields can be placed without a wrapper");
+        }
       }
 
 

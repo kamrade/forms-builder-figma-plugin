@@ -66,3 +66,8 @@ body {
 .logs .log-comment {
   opacity: .25;
 }
+
+.logs .log-comment.log-error {
+  opacity: 1;
+  color: orangered;
+}

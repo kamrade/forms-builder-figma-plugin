@@ -77,6 +77,7 @@ function App() {
     className += log.includes('subtitle') || log.includes('description') ? 'log-text ' : '';
     className += log.includes("'group'") || log.includes("'complex'") || log.includes("'list'") ? 'log-group ' : '';
     className += log.includes('-- ') ? 'log-comment ' : '';
+    className += log.includes('-- Error:') ? 'log-error ' : '';
     return className;
   }
 
