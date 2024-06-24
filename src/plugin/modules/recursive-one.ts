@@ -47,10 +47,17 @@ export const recursiveOne = (props: IRecursiveProps) => {
 
       //-- RowGrid
       if (frameLevel2.mainComponent?.parent?.name === 'RowGrid') {
+
+        const rowWrapper = frameLevel2.children.filter(t => t.name === 'RowWrapper');
+        const optional = frameLevel2.children.filter(t => t.name === 'optional-field-tick');
+        let isOptional = (optional as LineNode[])[0].visible;
+        
         const componentProps: any = frameLevel2.componentProperties.type;
+
         if (componentProps.type === 'VARIANT') {
           const gridArray = componentProps.value.split('|');
-          frameLevel2.children.map((childFrame, col) => {
+
+          (rowWrapper[0] as FrameNode).children.map((childFrame, col) => {
 
             if (childFrame.type === 'INSTANCE') {
               //>>> Primitive field (text, select, date, textarea, multi-select, multi-text, checkbox, radio)
@@ -72,6 +79,12 @@ export const recursiveOne = (props: IRecursiveProps) => {
                 parentId: parentId ? parentId : 'null'
               });
 
+              if (isOptional) {
+                innerFields.push('-- is optional:')
+              }
+              if (isOptional) {
+                innerTemplates.push('-- is optional:')
+              }
               innerFields.push(field);
               innerTemplates.push(template);
               innerFieldId += 1;
