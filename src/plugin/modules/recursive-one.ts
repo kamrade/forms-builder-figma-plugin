@@ -38,7 +38,11 @@ export const recursiveOne = (props: IRecursiveProps) => {
   let innerFieldId = fieldId;
   let innerCounter = elementCounter;
 
-  element.children.map((frameLevel2, row) => {
+  let row = 0;
+
+  element.children.map((frameLevel2, r) => {
+
+    // row = r;
 
     //- Instance
     if (frameLevel2.type === 'INSTANCE') {
@@ -87,8 +91,6 @@ export const recursiveOne = (props: IRecursiveProps) => {
               innerTemplates.push(template);
               innerFieldId += 1;
               innerCounter += 1;
-
-              
               
             } else {
               //---- ERROR. Should be a component instance or variant.
@@ -101,6 +103,8 @@ export const recursiveOne = (props: IRecursiveProps) => {
           innerFields.push("    -- Error: 03");
           innerTemplates.push("    -- Error: 03");
         }
+
+        row += 1;
 
 
       //-- Button
@@ -135,6 +139,8 @@ export const recursiveOne = (props: IRecursiveProps) => {
             isContainer: false,
             parentId: parentId ? parentId : 'null'
           });
+
+          row += 1;
           
           innerFields.push(field);
           innerTemplates.push(template);
@@ -150,10 +156,13 @@ export const recursiveOne = (props: IRecursiveProps) => {
 
     //-  >>> Group, Complex(List+Comples)
     } else if (frameLevel2.type === 'FRAME') {
-      if (frameLevel2?.name === 'Group' || frameLevel2?.name === 'List') {
 
+      if (frameLevel2?.name === 'Group' || frameLevel2?.name === 'List') {
+        
+        //-- >>> Group or List
         const blockType = frameLevel2.name.toLowerCase();
         const templateId = generateUUID();
+        const complexTemplateId = generateUUID();
 
         const { field, template } = assembleLine({
           fieldId: innerFieldId,
@@ -163,7 +172,7 @@ export const recursiveOne = (props: IRecursiveProps) => {
           label: '',
           tenantId,
           selectorId: null,
-          templateId, 
+          templateId,
           formTemplateId,
           row,
           col: 1,
@@ -175,11 +184,13 @@ export const recursiveOne = (props: IRecursiveProps) => {
         innerFieldId += 1;
         innerCounter += 1;
         
+        
         innerFields.push(`    -- Block: ${blockType}`);
         innerFields.push(field);
         innerTemplates.push(`    -- Block: ${blockType}`);
         innerTemplates.push(template);
 
+        //--- >>> Complex
         if (blockType === 'list') {
           const { field, template } = assembleLine({
             fieldId: innerFieldId,
@@ -189,13 +200,13 @@ export const recursiveOne = (props: IRecursiveProps) => {
             label: '',
             tenantId,
             selectorId: null,
-            templateId: generateUUID(),
+            templateId: complexTemplateId,
             formTemplateId,
-            row,
+            row: 0,
             col: 1,
             weight: 100,
             isContainer: true,
-            parentId: parentId ? parentId : 'null'
+            parentId: templateId
           });
 
           innerFieldId += 1;
@@ -205,6 +216,7 @@ export const recursiveOne = (props: IRecursiveProps) => {
           innerTemplates.push(template);
         }
 
+        // --- >>> Group or List Children
         const groupResult: any = recursiveOne({ 
           element: frameLevel2, 
           params: props.params, 
@@ -212,7 +224,7 @@ export const recursiveOne = (props: IRecursiveProps) => {
           fieldId: innerFieldId, 
           fields: innerFields, 
           templates: innerTemplates,
-          parentId: templateId
+          parentId: (frameLevel2?.name === 'Group') ? templateId : complexTemplateId
         });
         
         innerFields = [...groupResult.res.fields];
@@ -221,6 +233,8 @@ export const recursiveOne = (props: IRecursiveProps) => {
         innerTemplates.push(`    -- End of the ${blockType}`);
         innerCounter = groupResult.counter;
         innerFieldId = groupResult.fieldId;
+
+        row += 1;
       }
     }
   });
