@@ -3,9 +3,9 @@ import { SCAN_FORMS, FORMS_SCANING_COMPLETE, SELECTION_CHANGED } from '../../con
 import '../styles/ui.css';
 import { type FormFields } from '../../typings/form-defaults';
 
-const preTextField = 'INSERT INTO field(id, name, title, type, tenant_id, selector_id) VALUES';
+const preTextField = 'INSERT INTO field(id, name, title, type, tenant_id, selector_id)';
 const preTextTemplate =
-  'INSERT INTO form_template_field(id, form_template_id, row, col, weight, field_id, is_container, "type", parent, tenant_id) VALUES';
+  'INSERT INTO form_template_field(id, form_template_id, row, col, weight, field_id, is_container, "type", parent, tenant_id)';
 
 function App() {
   const [logs, setLogs] = useState<string[]>([]);
@@ -24,12 +24,14 @@ function App() {
 
       if (type === FORMS_SCANING_COMPLETE) {
         addMessage(preTextField);
+        addMessage('VALUES');
         message.result.fields.map((field: string) => setLogs((l) => [...l, field]));
 
-        addMessage('--');
-        addMessage('--');
-        addMessage('--');
+        addMessage('-- ');
+        addMessage('-- ');
+        addMessage('-- ');
         addMessage(preTextTemplate);
+        addMessage('VALUES');
         message.result.templates.map((template: string) => setLogs((l) => [...l, template]));
       }
     };
@@ -106,7 +108,7 @@ function App() {
           </label>
           <div className="mb-2" style={{ display: 'flex', gap: '0.25rem' }}>
             <button type="submit" className="button-base button-primary" disabled={!selectionIsValid}>
-              Scan forms
+              Scan form
             </button>
             <button type="button" className="button-base" onClick={() => setLogs([])}>
               Clean output
@@ -115,18 +117,20 @@ function App() {
         </form>
       </div>
 
-      <div className="logs">
-        {logs?.map((log, i) => (
-          <span key={i}>
-            
-            <span className={getLogClassName(log)} key={i}>
-              {log}
-            </span>
+      <pre>
+        <div className="logs">
+          {logs?.map((log, i) => (
+            <span key={i}>
+              
+              <span className={getLogClassName(log)} key={i}>
+                {log}
+              </span>
 
-            <br/>
-          </span>
-        ))}
-      </div>
+              <br/>
+            </span>
+          ))}
+        </div>
+      </pre>
     </div>
   );
 }

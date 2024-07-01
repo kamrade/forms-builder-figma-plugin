@@ -1,6 +1,7 @@
 console.clear();
 import { SCAN_FORMS, FORMS_SCANING_COMPLETE, SELECTION_CHANGED } from '../const/message-types';
 import { scanForm } from './modules/scan-form';
+import { semicolonAtTheEnd } from './modules/semicolon-at-the-end';
 
 figma.showUI(__html__);
 figma.ui.resize(1000, 620);
@@ -38,6 +39,12 @@ figma.ui.onmessage = (msg) => {
       formPrefix,
       formTemplateId
     });
+
+
+    result.fields = semicolonAtTheEnd(result.fields);
+    result.templates = semicolonAtTheEnd(result.templates);
+
+
 
     figma.ui.postMessage({
       type: FORMS_SCANING_COMPLETE,

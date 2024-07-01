@@ -40,10 +40,8 @@ export const recursiveOne = (props: IRecursiveProps) => {
 
   element.children.map((frameLevel2, row) => {
 
-
     //- Instance
     if (frameLevel2.type === 'INSTANCE') {
-
 
       //-- RowGrid
       if (frameLevel2.mainComponent?.parent?.name === 'RowGrid') {
@@ -73,17 +71,17 @@ export const recursiveOne = (props: IRecursiveProps) => {
                 templateId: generateUUID(), 
                 formTemplateId,
                 row,
-                col,
+                col: col + 1,
                 weight: Math.floor((gridArray[col] / 12) * 100),
                 isContainer: false,
                 parentId: parentId ? parentId : 'null'
               });
 
               if (isOptional) {
-                innerFields.push('-- is optional:')
+                innerFields.push('    -- is optional (conditional):')
               }
               if (isOptional) {
-                innerTemplates.push('-- is optional:')
+                innerTemplates.push('    -- is optional (conditional):')
               }
               innerFields.push(field);
               innerTemplates.push(template);
@@ -94,14 +92,14 @@ export const recursiveOne = (props: IRecursiveProps) => {
               
             } else {
               //---- ERROR. Should be a component instance or variant.
-              innerFields.push("-- Error: 04");
-              innerTemplates.push("-- Error: 04");
+              innerFields.push("    -- Error: 04");
+              innerTemplates.push("    -- Error: 04");
             }
           });
         } else {
           //--- ERROR. Wrong RowGrid format. Should be Variant.
-          innerFields.push("-- Error: 03");
-          innerTemplates.push("-- Error: 03");
+          innerFields.push("    -- Error: 03");
+          innerTemplates.push("    -- Error: 03");
         }
 
 
@@ -109,11 +107,11 @@ export const recursiveOne = (props: IRecursiveProps) => {
       } else if (frameLevel2.mainComponent.parent?.name) {
         if (frameLevel2.mainComponent.parent?.name.substring(0, 6) === "Button") {
           const labelText = (frameLevel2.children.filter((item, _i) => item.name === 'Button label') as TextNode[])[0].characters;
-          innerFields.push(`-- Shoud be a Button with a label: ${labelText}`);
-          innerTemplates.push(`-- Shoud be a Button with a label: ${labelText}`);
+          innerFields.push(`    -- Shoud be a Button with a label: ${labelText}`);
+          innerTemplates.push(`    -- Shoud be a Button with a label: ${labelText}`);
         } else {
-          innerFields.push(`-- Error: Unsupported Instance`);
-          innerTemplates.push(`-- Error: Unsupported Instance`);
+          innerFields.push(`    -- Error: Unsupported Instance`);
+          innerTemplates.push(`    -- Error: Unsupported Instance`);
         }
 
 
@@ -144,8 +142,8 @@ export const recursiveOne = (props: IRecursiveProps) => {
           innerCounter += 1;
         } else {
           // ERROR: Can't put form element without a wrapper
-          innerFields.push("-- Error: Only text form fields can be placed without a wrapper");
-          innerTemplates.push("-- Error: Only text form fields can be placed without a wrapper");
+          innerFields.push("    -- Error: Only text form fields can be placed without a wrapper");
+          innerTemplates.push("    -- Error: Only text form fields can be placed without a wrapper");
         }
       }
 
@@ -170,16 +168,16 @@ export const recursiveOne = (props: IRecursiveProps) => {
           row,
           col: 1,
           weight: 100,
-          isContainer: false,
+          isContainer: true,
           parentId: parentId ? parentId : 'null'
         });
 
         innerFieldId += 1;
         innerCounter += 1;
         
-        innerFields.push(`-- Block: ${blockType}`);
+        innerFields.push(`    -- Block: ${blockType}`);
         innerFields.push(field);
-        innerTemplates.push(`-- Block: ${blockType}`);
+        innerTemplates.push(`    -- Block: ${blockType}`);
         innerTemplates.push(template);
 
         if (blockType === 'list') {
@@ -196,7 +194,7 @@ export const recursiveOne = (props: IRecursiveProps) => {
             row,
             col: 1,
             weight: 100,
-            isContainer: false,
+            isContainer: true,
             parentId: parentId ? parentId : 'null'
           });
 
@@ -219,8 +217,8 @@ export const recursiveOne = (props: IRecursiveProps) => {
         
         innerFields = [...groupResult.res.fields];
         innerTemplates = [...groupResult.res.templates];
-        innerFields.push(`-- End of the ${blockType}`);
-        innerTemplates.push(`-- End of the ${blockType}`);
+        innerFields.push(`    -- End of the ${blockType}`);
+        innerTemplates.push(`    -- End of the ${blockType}`);
         innerCounter = groupResult.counter;
         innerFieldId = groupResult.fieldId;
       }
