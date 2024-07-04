@@ -197,7 +197,7 @@ export const recursiveOne = (props: IRecursiveProps) => {
           innerTemplates.push(template);
 
           //--- >>> Complex
-          if (blockType === 'list' || blockType === 'complex-modal') {
+          if (blockType === 'list' || blockType === 'complex-modal' || blockType === 'complex') {
             const { field, template } = assembleLine({
               fieldId: innerFieldId,
               formPrefix,

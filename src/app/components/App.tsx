@@ -7,6 +7,8 @@ const preTextField = 'INSERT INTO field(id, name, title, type, tenant_id, select
 const preTextTemplate =
   'INSERT INTO form_template_field(id, form_template_id, row, col, weight, field_id, is_container, "type", parent, tenant_id)';
 
+const regExp = /\,|\)|\(|'|\$/g;
+
 function App() {
   const [logs, setLogs] = useState<string[]>([]);
   const [selectionIsValid, setSelectionIsValid] = useState(false);
@@ -131,7 +133,7 @@ function App() {
             </button>
             { counter !== 0 && counter !== (logs.length) &&
               <button type="button" className="button-base" onClick={() => setSelectedWord('')} style={{color: 'var(--color-text-code-highlight)'}}>
-                {`Clean selection: ${counter}`}
+                {`Clean selection: [${counter}] by word: ${selectedWord}`}
               </button>
             }
           </div>
@@ -148,9 +150,9 @@ function App() {
                   {log.split(' ').map((word, k) => (
                     <span 
                       key={k} 
-                      className={`log-word ${word.includes(selectedWord) && selectedWord !== '' ? 'log-word-selected' : ''}`} 
-                      onClick={() => setSelectedWord(word)}>
-                        {word}{' '}
+                      className={`log-word ${ word.includes(selectedWord) && selectedWord !== '' ? 'log-word-selected' : ''}`} 
+                      onClick={() => { setSelectedWord( word.replace(regExp, "") )}}>
+                       {word}{' '}
                     </span>
                   ))}
                 </span>
