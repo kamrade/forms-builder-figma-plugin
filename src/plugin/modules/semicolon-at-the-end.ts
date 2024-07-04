@@ -1,3 +1,5 @@
+// Replace comma to semicolon at the end of the list
+
 export const semicolonAtTheEnd = (arr: string[]) => {
   let firstChars = '--';
   let index = arr.length - 1;

@@ -1,4 +1,4 @@
-export const finActivity = `
+
   -- BEGIN: Optional Financial Activity Routed Through OpenPayd
   INSERT INTO field(id, name, title, type, tenant_id, selector_id)
   VALUES
@@ -131,4 +131,3 @@ export const finActivity = `
       ('458a93de-a4df-4f51-b996-630ab5d4dd16', 491, 4, 1, 100, 18117, false, 'primitive', null, 3);
 
   -- END: Optional Financial Activity Routed Through OpenPayd
-`;

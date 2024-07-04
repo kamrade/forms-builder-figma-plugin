@@ -1,4 +1,4 @@
-export const companyInformation = `
+
 
     -- SELECTION: F/Company Information
     INSERT INTO field(id, name, title, type, tenant_id, selector_id) VALUES
@@ -166,5 +166,3 @@ export const companyInformation = `
     ('b4fb114d-eb40-4e06-a649-edb7e2a7fcd7', 410, 4, 1, 50, 20065, false, 'primitive', 'effe6f57-d37c-46b4-8b72-c9d788879bd5', 3)
     -- End of the list
     -- Shoud be a Button with a label: Add PEP
-
-`
