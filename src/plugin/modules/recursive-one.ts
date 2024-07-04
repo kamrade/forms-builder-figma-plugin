@@ -1,6 +1,7 @@
 import { IScanFormParams } from './scan-form';
 import { generateUUID } from './generate-uuid';
 import { assembleLine } from './assemble-line';
+import { wrapperFieldTypes, groupFieldType, complexFieldType } from '../../const/field-types';
 
 export interface IRecursiveProps {
   element: FrameNode;
@@ -17,8 +18,8 @@ export interface IRecursiveProps {
 // This function helps to find checkbox label.
 */
 export const getElementLabel = (frame: SceneNode) => {
-  const labelEl = (frame as FrameNode)?.children.find((childEl) => childEl.name === '> label' || childEl.name === '> label block');
-  
+  const labelEl = (frame as FrameNode)?.children.find((childEl) => childEl?.name === '> label' || childEl.name === '> label block');
+
   if (labelEl.name === '> label') {
     return (labelEl as TextNode).characters;
   } else if (labelEl.name === '> label block') {
@@ -62,8 +63,8 @@ export const recursiveOne = (props: IRecursiveProps) => {
           (rowWrapper[0] as FrameNode).children.map((childFrame, col) => {
 
             if (childFrame.type === 'INSTANCE') {
-              //>>> Primitive field (text, select, date, textarea, multi-select, multi-text, checkbox, radio)
-              
+              //>>> Primitive field (text, select, date, textarea, multi-select, multi-text, checkbox, radio, document)
+
               const { field, template } = assembleLine({
                 fieldId: innerFieldId,
                 formPrefix,
@@ -114,8 +115,8 @@ export const recursiveOne = (props: IRecursiveProps) => {
           innerFields.push(`    -- Shoud be a Button with a label: ${labelText}`);
           innerTemplates.push(`    -- Shoud be a Button with a label: ${labelText}`);
         } else {
-          innerFields.push(`    -- Error: Unsupported Instance`);
-          innerTemplates.push(`    -- Error: Unsupported Instance`);
+          innerFields.push(`    -- Error: 01. Unsupported Instance`);
+          innerTemplates.push(`    -- Error: 01. Unsupported Instance`);
         }
 
 
@@ -148,93 +149,103 @@ export const recursiveOne = (props: IRecursiveProps) => {
           innerCounter += 1;
         } else {
           // ERROR: Can't put form element without a wrapper
-          innerFields.push("    -- Error: Only text form fields can be placed without a wrapper");
-          innerTemplates.push("    -- Error: Only text form fields can be placed without a wrapper");
+          innerFields.push("    -- Error: 02. Only text form fields can be placed without a wrapper");
+          innerTemplates.push("    -- Error: 02. Only text form fields can be placed without a wrapper");
         }
       }
 
 
-    //-  >>> Group, Complex(List+Comples)
+    //-  >>> Group, Complex(List+Comples), ComplexBlock
     } else if (frameLevel2.type === 'FRAME') {
 
-      if (frameLevel2?.name === 'Group' || frameLevel2?.name === 'List') {
-        
-        //-- >>> Group or List
+      if (frameLevel2?.name) {
         const blockType = frameLevel2.name.toLowerCase();
-        const templateId = generateUUID();
-        const complexTemplateId = generateUUID();
 
-        const { field, template } = assembleLine({
-          fieldId: innerFieldId,
-          formPrefix,
-          counter: innerCounter,
-          fieldType: blockType,
-          label: '',
-          tenantId,
-          selectorId: null,
-          templateId,
-          formTemplateId,
-          row,
-          col: 1,
-          weight: 100,
-          isContainer: true,
-          parentId: parentId ? parentId : 'null'
-        });
+        if (wrapperFieldTypes.includes(blockType)) {
+          
+          //-- >>> Group or List
+          const templateId = generateUUID();
+          const complexTemplateId = generateUUID();
 
-        innerFieldId += 1;
-        innerCounter += 1;
-        
-        
-        innerFields.push(`    -- Block: ${blockType}`);
-        innerFields.push(field);
-        innerTemplates.push(`    -- Block: ${blockType}`);
-        innerTemplates.push(template);
+          const primaryBlockType = groupFieldType.includes(blockType) ? 'group' : 'list';
+          const secondaryBlockType = complexFieldType.includes(blockType) ? 'complex' : 'complex-modal';
 
-        //--- >>> Complex
-        if (blockType === 'list') {
           const { field, template } = assembleLine({
             fieldId: innerFieldId,
             formPrefix,
             counter: innerCounter,
-            fieldType: 'complex',
+            fieldType: primaryBlockType,
             label: '',
             tenantId,
             selectorId: null,
-            templateId: complexTemplateId,
+            templateId,
             formTemplateId,
-            row: 0,
+            row,
             col: 1,
             weight: 100,
             isContainer: true,
-            parentId: templateId
+            parentId: parentId ? parentId : 'null'
           });
 
           innerFieldId += 1;
           innerCounter += 1;
           
+          
+          innerFields.push(`    -- Block: ${blockType}`);
           innerFields.push(field);
+          innerTemplates.push(`    -- Block: ${blockType}`);
           innerTemplates.push(template);
+
+          //--- >>> Complex
+          if (blockType === 'list' || blockType === 'complex-modal') {
+            const { field, template } = assembleLine({
+              fieldId: innerFieldId,
+              formPrefix,
+              counter: innerCounter,
+              fieldType: secondaryBlockType,
+              label: '',
+              tenantId,
+              selectorId: null,
+              templateId: complexTemplateId,
+              formTemplateId,
+              row: 0,
+              col: 1,
+              weight: 100,
+              isContainer: true,
+              parentId: templateId
+            });
+
+            innerFieldId += 1;
+            innerCounter += 1;
+            
+            innerFields.push(field);
+            innerTemplates.push(template);
+          }
+
+          // --- >>> Group or List Children
+          const groupResult: any = recursiveOne({ 
+            element: frameLevel2, 
+            params: props.params, 
+            elementCounter: innerCounter,
+            fieldId: innerFieldId, 
+            fields: innerFields, 
+            templates: innerTemplates,
+            parentId: (frameLevel2?.name === 'Group') ? templateId : complexTemplateId
+          });
+          
+          innerFields = [...groupResult.res.fields];
+          innerTemplates = [...groupResult.res.templates];
+          innerFields.push(`    -- End of the ${blockType}`);
+          innerTemplates.push(`    -- End of the ${blockType}`);
+          innerCounter = groupResult.counter;
+          innerFieldId = groupResult.fieldId;
+
+          row += 1;
         }
-
-        // --- >>> Group or List Children
-        const groupResult: any = recursiveOne({ 
-          element: frameLevel2, 
-          params: props.params, 
-          elementCounter: innerCounter,
-          fieldId: innerFieldId, 
-          fields: innerFields, 
-          templates: innerTemplates,
-          parentId: (frameLevel2?.name === 'Group') ? templateId : complexTemplateId
-        });
-        
-        innerFields = [...groupResult.res.fields];
-        innerTemplates = [...groupResult.res.templates];
-        innerFields.push(`    -- End of the ${blockType}`);
-        innerTemplates.push(`    -- End of the ${blockType}`);
-        innerCounter = groupResult.counter;
-        innerFieldId = groupResult.fieldId;
-
-        row += 1;
+      } else {
+        //--- ERROR. 
+        innerFields.push("    -- Error: 06");
+        innerTemplates.push("    -- Error: 06");
       }
     }
   });

@@ -1,3 +1,5 @@
+import { wrapperFieldTypes } from '../../const/field-types';
+
 export interface IAssembleLineProps {
   fieldId: number;                // var   - incremental
   formPrefix: string;             // const
@@ -22,16 +24,16 @@ export interface IAssembleLineProps {
 // id, form_template_id, row, col, weight, field_id, is_container, "type", parent, tenant_id
 */
 
-const primitiveOrComplex = (fieldType) => {
-  const complex = ['group', 'list', 'complex', 'key-value', 'key', 'value'];
-  return complex.includes(fieldType) ? fieldType : 'primitive';
-}
+const primitiveOrComplex = (fieldType: string) =>
+  wrapperFieldTypes.includes(fieldType) ? fieldType : 'primitive';
+
+const replaceQuotes = (str: string) => str.split("'").join("''");
 
 export const assembleLine = (p: IAssembleLineProps) => {
   let field = `    (`;
   field    += `${p.fieldId}, `;
   field    += `'${p.formPrefix}_r${p.counter}_${p.fieldType}', `;
-  field    += `'${p.label}', `;
+  field    += `'${replaceQuotes(p.label)}', `;
   field    += `'${p.fieldType}', `;
   field    += p.tenantId + ', ';
   field    += p.selectorId ? `'${p.selectorId}'` : 'null';
