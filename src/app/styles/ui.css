@@ -71,3 +71,11 @@ body {
   opacity: 1;
   color: orangered;
 }
+
+.log-word {
+  cursor: pointer;
+}
+
+.log-word-selected {
+  color: var(--color-text-code-highlight);
+}

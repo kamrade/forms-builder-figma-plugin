@@ -10,6 +10,19 @@ const preTextTemplate =
 function App() {
   const [logs, setLogs] = useState<string[]>([]);
   const [selectionIsValid, setSelectionIsValid] = useState(false);
+  const [selectedWord, setSelectedWord] = useState<string>();
+  const [counter, setCounter] = useState(0);
+
+  useEffect(() => {
+    
+    let cnt = 0;
+    logs.map((log, _i) => {
+      cnt += log.includes(selectedWord) ?  1 : 0 ;
+    });
+    setCounter(cnt);
+
+  }, [selectedWord])
+
   const addMessage = (message: string) => setLogs((l) => [...l, message]);
 
   useEffect(() => {
@@ -106,29 +119,47 @@ function App() {
             <span className="label-text">Form template ID</span>
             <input className="text-input" type="text" id="form_template_id" name="form_template_id" />
           </label>
-          <div className="mb-2" style={{ display: 'flex', gap: '0.25rem' }}>
+          <div className="mb-2" style={{ display: 'flex', gap: '0.25rem', paddingTop: '.5rem' }}>
             <button type="submit" className="button-base button-primary" disabled={!selectionIsValid}>
               Scan form
             </button>
-            <button type="button" className="button-base" onClick={() => setLogs([])}>
+            <button type="button" className="button-base" onClick={() => {
+              setLogs([]);
+              setCounter(0);
+            }}>
               Clean output
             </button>
+            { counter !== 0 && counter !== (logs.length) &&
+              <button type="button" className="button-base" onClick={() => setSelectedWord('')} style={{color: 'var(--color-text-code-highlight)'}}>
+                {`Clean selection: ${counter}`}
+              </button>
+            }
           </div>
         </form>
       </div>
 
       <pre>
         <div className="logs">
-          {logs?.map((log, i) => (
-            <span key={i}>
-              
-              <span className={getLogClassName(log)} key={i}>
-                {log}
+          
+          {logs?.map((log, i) => {
+            return (
+              <span key={i}>
+                <span className={getLogClassName(log)} >
+                  {log.split(' ').map((word, k) => (
+                    <span 
+                      key={k} 
+                      className={`log-word ${word.includes(selectedWord) && selectedWord !== '' ? 'log-word-selected' : ''}`} 
+                      onClick={() => setSelectedWord(word)}>
+                        {word}{' '}
+                    </span>
+                  ))}
+                </span>
+                <br/>
               </span>
+            );
+          }
 
-              <br/>
-            </span>
-          ))}
+        )}
         </div>
       </pre>
     </div>
