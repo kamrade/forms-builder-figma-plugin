@@ -1,0 +1,12 @@
+{
+  "conditions": [
+    {
+      "order": 100,
+      "logicalOperator": "AND",
+      "dependsOnTemplateField": "31ad5cbb-1697-4a13-8444-313d561f2b02",
+      "compareOperator": "equal",
+      "value": "true"
+    }
+  ],
+  "actions": [{ "visible": true }]
+}

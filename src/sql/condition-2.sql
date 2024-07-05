@@ -1,0 +1,2 @@
+UPDATE form_template_field SET condition = '{"conditions":[{"order":100,"logicalOperator":"AND","dependsOnTemplateField":"31ad5cbb-1697-4a13-8444-313d561f2b02","compareOperator":"equal","value":"true"}],"actions":[{"visible":true}]}'
+where id in ('7775a44c-68ee-431b-9be9-ff9b4171c44c');

@@ -1,7 +1,7 @@
 import { IScanFormParams } from './scan-form';
 import { generateUUID } from './generate-uuid';
 import { assembleLine } from './assemble-line';
-import { wrapperFieldTypes, groupFieldType, complexFieldType } from '../../const/field-types';
+import { wrapperFieldTypes, groupFieldType, complexFieldType, complexCompactFieldType, complexModalFieldType, complexType } from '../../const/field-types';
 
 export interface IRecursiveProps {
   element: FrameNode;
@@ -155,9 +155,12 @@ export const recursiveOne = (props: IRecursiveProps) => {
       }
 
 
-    //-  >>> Group, Complex(List+Comples), ComplexBlock
+
+    // COMPLEX FIELDS
+    //-  >>> Group, Complex(List+Complexs)
     } else if (frameLevel2.type === 'FRAME') {
 
+      // This is probably redundant
       if (frameLevel2?.name) {
         const blockType = frameLevel2.name.toLowerCase();
 
@@ -167,8 +170,17 @@ export const recursiveOne = (props: IRecursiveProps) => {
           const templateId = generateUUID();
           const complexTemplateId = generateUUID();
 
-          const primaryBlockType = groupFieldType.includes(blockType) ? 'group' : 'list';
-          const secondaryBlockType = complexFieldType.includes(blockType) ? 'complex' : 'complex-modal';
+          const primaryBlockType = 
+            groupFieldType.includes(blockType) ? 'group' :
+              complexFieldType.includes(blockType) ? 'list' :
+                complexCompactFieldType.includes(blockType) ? 'list-compact' :
+                  complexModalFieldType.includes(blockType) ? 'list-modal' : 'unknown-list';
+
+          const secondaryBlockType = 
+            complexFieldType.includes(blockType) ? 'complex' : 
+              complexCompactFieldType.includes(blockType) ? 'complex-compact' :
+                complexModalFieldType.includes(blockType) ? 'complex-modal' : 'complex-unknown'
+                
 
           // >>> primary block type: group | list
           const { field, template } = assembleLine({
@@ -198,7 +210,7 @@ export const recursiveOne = (props: IRecursiveProps) => {
           innerTemplates.push(template);
 
           // >>> secondary block type: complex-modal | complex
-          if (blockType === 'list' || blockType === 'complex-modal' || blockType === 'complex') {
+          if ( complexType.includes(blockType) ) {
             const { field, template } = assembleLine({
               fieldId: innerFieldId,
               formPrefix,
@@ -242,11 +254,11 @@ export const recursiveOne = (props: IRecursiveProps) => {
           innerFieldId = groupResult.fieldId;
 
           row += 1;
+        } else {
+          //--- ERROR. 
+          innerFields.push("    -- Error: 06. Unsupported frame name");
+          innerTemplates.push("    -- Error: 06. Unsupported frame name");
         }
-      } else {
-        //--- ERROR. 
-        innerFields.push("    -- Error: 06");
-        innerTemplates.push("    -- Error: 06");
       }
     }
   });
