@@ -4,8 +4,7 @@ import '../styles/ui.css';
 import { type FormFields } from '../../typings/form-defaults';
 
 const preTextField = 'INSERT INTO field(id, name, title, type, tenant_id, selector_id)';
-const preTextTemplate =
-  'INSERT INTO form_template_field(id, form_template_id, row, col, weight, field_id, is_container, "type", parent, tenant_id)';
+const preTextTemplate = 'INSERT INTO form_template_field(id, form_template_id, row, col, weight, field_id, is_container, "type", parent, tenant_id)';
 
 const regExp = /\,|\)|\(|'|\$/g;
 
@@ -13,22 +12,10 @@ function App() {
   const [logs, setLogs] = useState<string[]>([]);
   const [selectionIsValid, setSelectionIsValid] = useState(false);
   const [selectedWord, setSelectedWord] = useState<string>();
-  const [counter, setCounter] = useState(0);
-
-  useEffect(() => {
-    
-    let cnt = 0;
-    logs.map((log, _i) => {
-      cnt += log.includes(selectedWord) ?  1 : 0 ;
-    });
-    setCounter(cnt);
-
-  }, [selectedWord])
 
   const addMessage = (message: string) => setLogs((l) => [...l, message]);
 
   useEffect(() => {
-
     window.onmessage = (event: MessageEvent) => {
       const { type, message, validSelection } = event.data.pluginMessage;
 
@@ -96,7 +83,7 @@ function App() {
     className += log.includes('-- ') ? 'log-comment ' : '';
     className += log.includes('-- Error:') ? 'log-error ' : '';
     return className;
-  }
+  };
 
   return (
     <div className="page">
@@ -125,43 +112,49 @@ function App() {
             <button type="submit" className="button-base button-primary" disabled={!selectionIsValid}>
               Scan form
             </button>
-            <button type="button" className="button-base" onClick={() => {
-              setLogs([]);
-              setCounter(0);
-            }}>
+            <button
+              type="button"
+              className="button-base"
+              onClick={() => {
+                setLogs([]);
+              }}
+            >
               Clean output
             </button>
-            { counter !== 0 && counter !== (logs.length) &&
-              <button type="button" className="button-base" onClick={() => setSelectedWord('')} style={{color: 'var(--color-text-code-highlight)'}}>
-                {`Clean selection: [${counter}] by word: ${selectedWord}`}
-              </button>
-            }
+            
+            <button type="button" 
+              className="button-base" 
+              onClick={() => setSelectedWord('')} 
+              style={{ color: selectedWord ? 'var(--color-text-code-highlight)' : 'var(--color-text-muted)' }}
+            >
+              {`Clean selection: "${selectedWord || '' }"`}
+            </button>
+
           </div>
         </form>
       </div>
 
       <pre>
         <div className="logs">
-          
           {logs?.map((log, i) => {
             return (
               <span key={i}>
-                <span className={getLogClassName(log)} >
+                <span className={getLogClassName(log)}>
+                  
                   {log.split(' ').map((word, k) => (
-                    <span 
-                      key={k} 
-                      className={`log-word ${ word.includes(selectedWord) && selectedWord !== '' ? 'log-word-selected' : ''}`} 
-                      onClick={() => { setSelectedWord( word.replace(regExp, "") )}}>
-                       {word}{' '}
+                    <span key={k}
+                      className={`log-word ${word.replaceAll(regExp, '') === selectedWord && selectedWord !== '' ? 'log-word-selected' : ''}`}
+                      onClick={() => setSelectedWord(word.replaceAll(regExp, ''))}
+                    >
+                      {word}{' '}
                     </span>
                   ))}
+
                 </span>
-                <br/>
+                <br />
               </span>
             );
-          }
-
-        )}
+          })}
         </div>
       </pre>
     </div>
