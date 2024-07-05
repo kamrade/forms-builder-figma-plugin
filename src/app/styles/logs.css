@@ -1,0 +1,43 @@
+.logs {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  height: 424px;
+  overflow-y: auto;
+  padding: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.log-row:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.logs .log {
+  margin: 0;
+  padding: 0.25rem 0;
+  opacity: 1;
+}
+
+.logs .log-text {
+ opacity: .8 
+}
+
+.logs .log-group {
+  opacity: .5;
+}
+
+.logs .log-comment {
+  opacity: .25;
+}
+
+.logs .log-comment.log-error {
+  opacity: 1;
+  color: orangered;
+}
+
+.log-word {
+  cursor: default;
+}
+
+.log-word-selected {
+  color: var(--color-text-code-highlight);
+}

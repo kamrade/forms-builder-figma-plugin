@@ -127,7 +127,7 @@ function App() {
               onClick={() => setSelectedWord('')} 
               style={{ color: selectedWord ? 'var(--color-text-code-highlight)' : 'var(--color-text-muted)' }}
             >
-              {`Clean selection: "${selectedWord || '' }"`}
+              {`Clean selection: "${selectedWord || '---' }"`}
             </button>
 
           </div>
@@ -138,7 +138,7 @@ function App() {
         <div className="logs">
           {logs?.map((log, i) => {
             return (
-              <span key={i}>
+              <div key={i} className="log-row">
                 <span className={getLogClassName(log)}>
                   
                   {log.split(' ').map((word, k) => (
@@ -152,7 +152,7 @@ function App() {
 
                 </span>
                 <br />
-              </span>
+              </div>
             );
           })}
         </div>
