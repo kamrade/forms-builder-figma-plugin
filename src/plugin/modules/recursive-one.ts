@@ -170,6 +170,7 @@ export const recursiveOne = (props: IRecursiveProps) => {
           const primaryBlockType = groupFieldType.includes(blockType) ? 'group' : 'list';
           const secondaryBlockType = complexFieldType.includes(blockType) ? 'complex' : 'complex-modal';
 
+          // >>> primary block type: group | list
           const { field, template } = assembleLine({
             fieldId: innerFieldId,
             formPrefix,
@@ -196,7 +197,7 @@ export const recursiveOne = (props: IRecursiveProps) => {
           innerTemplates.push(`    -- Block: ${blockType}`);
           innerTemplates.push(template);
 
-          //--- >>> Complex
+          // >>> secondary block type: complex-modal | complex
           if (blockType === 'list' || blockType === 'complex-modal' || blockType === 'complex') {
             const { field, template } = assembleLine({
               fieldId: innerFieldId,
@@ -230,7 +231,7 @@ export const recursiveOne = (props: IRecursiveProps) => {
             fieldId: innerFieldId, 
             fields: innerFields, 
             templates: innerTemplates,
-            parentId: (frameLevel2?.name === 'Group') ? templateId : complexTemplateId
+            parentId: blockType === 'group' ? templateId : complexTemplateId
           });
           
           innerFields = [...groupResult.res.fields];
