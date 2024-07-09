@@ -14,7 +14,29 @@ This repo is using:
 - TypeScript
 - Prettier precommit hook
 
-## Roadmap
+## Conventions
 
-- transform between snake_case, cebab-case, camelCase
-- transform color between hex, rgba, hsla
+### Field Types
+
+### Form Structure
+  INSTANCE (frameLevel2.type === 'INSTANCE')
+    RowGrid (frameLevel2.mainComponent?.parent?.name === 'RowGrid')
+      VARIANT (frameLevel2.componentProperties.type.type === 'VARIANT')
+        INSTANCE (childFrame.type === 'INSTANCE')
+          = Primitive field (text, selector, datetime, textarea, multi-select, multi-text, checkbox, radio, document)
+        : Error 04
+      : Error 03
+    
+    Button (Name begins with 'Button')
+    : Error 01.
+
+    FormField (Name begins with 'FormField')
+      = Text field (subtitle, description)
+    : Others will be ignored
+
+  FRAME
+    blockType
+      = group, complex, complex-modal, complex-compact
+  : Others will be ignored
+
+

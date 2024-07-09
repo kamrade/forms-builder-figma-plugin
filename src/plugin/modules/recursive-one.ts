@@ -58,7 +58,9 @@ export const recursiveOne = (props: IRecursiveProps) => {
         const componentProps: any = frameLevel2.componentProperties.type;
 
         if (componentProps.type === 'VARIANT') {
-          const gridArray = componentProps.value.split('|');
+          
+          const splitted  = componentProps.value.split(' + ');
+          const gridArray = splitted[0].split('|');
 
           (rowWrapper[0] as FrameNode).children.map((childFrame, col) => {
 
@@ -86,7 +88,7 @@ export const recursiveOne = (props: IRecursiveProps) => {
                 innerFields.push('    -- is optional (conditional):')
               }
               if (isOptional) {
-                innerTemplates.push('    -- is optional (conditional):')
+                innerFields.push('    -- is optional (conditional):')
               }
               innerFields.push(field);
               innerTemplates.push(template);
