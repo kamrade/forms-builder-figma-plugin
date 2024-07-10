@@ -65,14 +65,16 @@ export const recursiveOne = (props: IRecursiveProps) => {
             if (childFrame.type === 'INSTANCE') {
               //>>> Primitive field (text, select, date, textarea, multi-select, multi-text, checkbox, radio, document)
 
+              const fieldType = childFrame.mainComponent.parent ? childFrame.mainComponent.parent.name.substring(12) : childFrame.mainComponent.name.substring(12);
+
               const { field, template } = assembleLine({
                 fieldId: innerFieldId,
                 formPrefix,
                 counter: innerCounter,
-                fieldType: childFrame.mainComponent.parent ? childFrame.mainComponent.parent.name.substring(12) : childFrame.mainComponent.name.substring(12),
+                fieldType: fieldType,
                 label: getElementLabel(childFrame),
                 tenantId,
-                selectorId: null,
+                selectorId: fieldType === 'selector' ? '-' : null,
                 templateId: generateUUID(), 
                 formTemplateId,
                 row,
