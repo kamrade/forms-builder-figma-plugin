@@ -6,12 +6,9 @@ import { type FormFields } from '../../typings/form-defaults';
 const preTextField = 'INSERT INTO field(id, name, title, type, tenant_id, selector_id)';
 const preTextTemplate = 'INSERT INTO form_template_field(id, form_template_id, row, col, weight, field_id, is_container, "type", parent, tenant_id)';
 
-const regExp = /\,|\)|\(|'|\$/g;
-
 function App() {
   const [logs, setLogs] = useState<string[]>([]);
   const [selectionIsValid, setSelectionIsValid] = useState(false);
-  const [selectedWord, setSelectedWord] = useState<string>();
 
   const addMessage = (message: string) => setLogs((l) => [...l, message]);
 
@@ -121,14 +118,6 @@ function App() {
             >
               Clean output
             </button>
-            
-            <button type="button" 
-              className="button-base" 
-              onClick={() => setSelectedWord('')} 
-              style={{ color: selectedWord ? 'var(--color-text-code-highlight)' : 'var(--color-text-muted)' }}
-            >
-              {`Clean selection: "${selectedWord || '---' }"`}
-            </button>
 
           </div>
         </form>
@@ -142,10 +131,7 @@ function App() {
                 <span className={getLogClassName(log)}>
                   
                   {log.split(' ').map((word, k) => (
-                    <span key={k}
-                      className={`log-word ${word.replaceAll(regExp, '') === selectedWord && selectedWord !== '' ? 'log-word-selected' : ''}`}
-                      onClick={() => setSelectedWord(word.replaceAll(regExp, ''))}
-                    >
+                    <span key={k} className={`log-word`}>
                       {word}{' '}
                     </span>
                   ))}

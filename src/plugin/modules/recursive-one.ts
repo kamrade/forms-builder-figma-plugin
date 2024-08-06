@@ -48,6 +48,8 @@ export const recursiveOne = (props: IRecursiveProps) => {
     //- Instance
     if (frameLevel2.type === 'INSTANCE') {
 
+
+
       //-- RowGrid
       if (frameLevel2.mainComponent?.parent?.name === 'RowGrid') {
 
@@ -112,22 +114,27 @@ export const recursiveOne = (props: IRecursiveProps) => {
         row += 1;
 
 
-      //-- Button
-      } else if (frameLevel2.mainComponent.parent?.name) {
-        if (frameLevel2.mainComponent.parent?.name.substring(0, 6) === "Button") {
+
+      //-- Variant Instance
+      } else if (frameLevel2.mainComponent.parent?.name && frameLevel2.mainComponent.parent?.name.substring(0, 6) === "Button") {
+
+        //-- Button
+        // if (frameLevel2.mainComponent.parent?.name.substring(0, 6) === "Button") {
           const labelText = (frameLevel2.children.filter((item, _i) => item.name === 'Button label') as TextNode[])[0].characters;
-          innerFields.push(`    -- Shoud be a Button with a label: ${labelText}`);
-          innerTemplates.push(`    -- Shoud be a Button with a label: ${labelText}`);
-        } else {
-          innerFields.push(`    -- Error: 01. Unsupported Instance`);
-          innerTemplates.push(`    -- Error: 01. Unsupported Instance`);
-        }
+          innerFields.push(`    -- Must be a Button with a label: ${labelText}`);
+          innerTemplates.push(`    -- Must be a Button with a label: ${labelText}`);
+        // } else {
+        //   innerFields.push(`    -- Error: 01. Unsupported Instance`);
+        //   innerTemplates.push(`    -- Error: 01. Unsupported Instance`);
+        // }
+
 
 
       //-- >>> Text field (subtitle, description)
-      } else if(frameLevel2.mainComponent.name.substring(0, 9) === 'FormField') {
+      } else if (frameLevel2.mainComponent.name.substring(0, 9) === 'FormField' || frameLevel2.name.substring(0, 9) === 'FormField') {
 
-        if (['subtitle', 'description'].includes(frameLevel2.mainComponent.name.substring(12))) {
+        if (frameLevel2.mainComponent.name.substring(12) === 'description' || frameLevel2.name.substring(12) === 'subtitle') {
+        // if (['subtitle', 'description'].includes(frameLevel2.mainComponent.name.substring(12))) {
           const { field, template } = assembleLine({
             fieldId: innerFieldId,
             formPrefix,
@@ -264,6 +271,9 @@ export const recursiveOne = (props: IRecursiveProps) => {
           innerTemplates.push("    -- Error: 06. Unsupported frame name");
         }
       }
+    } else {
+      innerFields.push("    -- Error: A1. Unsupported field");
+      innerTemplates.push("    -- Error: A1. Unsupported field");
     }
   });
 
