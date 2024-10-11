@@ -10,6 +10,7 @@ export interface IRecursiveProps {
   fieldId: number;
   fields: string[];
   templates: string[];
+  sqlLines: string[];
   parentId?: string;
 }
 
@@ -31,11 +32,12 @@ export const getElementLabel = (frame: SceneNode) => {
 
 export const recursiveOne = (props: IRecursiveProps) => {
   
-  const { element, elementCounter, fieldId, fields, templates, parentId } = props;
+  const { element, elementCounter, fieldId, fields, templates, parentId, sqlLines } = props;
   const { tenantId, formPrefix, formTemplateId } = props.params;
 
   let innerFields = [ ...fields ];
   let innerTemplates = [ ...templates ];
+  let innerSqlLines = [ ...sqlLines ];
   let innerFieldId = fieldId;
   let innerCounter = elementCounter;
 
@@ -71,7 +73,7 @@ export const recursiveOne = (props: IRecursiveProps) => {
 
               const fieldType = childFrame.mainComponent.parent ? childFrame.mainComponent.parent.name.substring(12) : childFrame.mainComponent.name.substring(12);
 
-              const { field, template } = assembleLine({
+              const { field, template, sqlLine } = assembleLine({
                 fieldId: innerFieldId,
                 formPrefix,
                 counter: innerCounter,
@@ -96,6 +98,7 @@ export const recursiveOne = (props: IRecursiveProps) => {
               }
               innerFields.push(field);
               innerTemplates.push(template);
+              innerSqlLines.push(sqlLine);
               innerFieldId += 1;
               innerCounter += 1;
               
@@ -103,12 +106,14 @@ export const recursiveOne = (props: IRecursiveProps) => {
               //---- ERROR. Should be a component instance or variant.
               innerFields.push("    -- Error: 04");
               innerTemplates.push("    -- Error: 04");
+              innerSqlLines.push("    -- Error: 04");
             }
           });
         } else {
           //--- ERROR. Wrong RowGrid format. Should be Variant.
           innerFields.push("    -- Error: 03");
           innerTemplates.push("    -- Error: 03");
+          innerSqlLines.push("    -- Error: 03");
         }
 
         row += 1;
@@ -123,6 +128,7 @@ export const recursiveOne = (props: IRecursiveProps) => {
           const labelText = (frameLevel2.children.filter((item, _i) => item.name === 'Button label') as TextNode[])[0].characters;
           innerFields.push(`    -- Must be a Button with a label: ${labelText}`);
           innerTemplates.push(`    -- Must be a Button with a label: ${labelText}`);
+          innerSqlLines.push(`    -- Must be a Button with a label: ${labelText}`);
         // } else {
         //   innerFields.push(`    -- Error: 01. Unsupported Instance`);
         //   innerTemplates.push(`    -- Error: 01. Unsupported Instance`);
@@ -135,7 +141,7 @@ export const recursiveOne = (props: IRecursiveProps) => {
 
         if (frameLevel2.mainComponent.name.substring(12) === 'description' || frameLevel2.name.substring(12) === 'subtitle') {
         // if (['subtitle', 'description'].includes(frameLevel2.mainComponent.name.substring(12))) {
-          const { field, template } = assembleLine({
+          const { field, template, sqlLine } = assembleLine({
             fieldId: innerFieldId,
             formPrefix,
             counter: innerCounter,
@@ -156,12 +162,14 @@ export const recursiveOne = (props: IRecursiveProps) => {
           
           innerFields.push(field);
           innerTemplates.push(template);
+          innerSqlLines.push(sqlLine);
           innerFieldId += 1;
           innerCounter += 1;
         } else {
           // ERROR: Can't put form element without a wrapper
           innerFields.push("    -- Error: 02. Only text form fields can be placed without a wrapper");
           innerTemplates.push("    -- Error: 02. Only text form fields can be placed without a wrapper");
+          innerSqlLines.push("    -- Error: 02. Only text form fields can be placed without a wrapper");
         }
       }
 
@@ -194,7 +202,7 @@ export const recursiveOne = (props: IRecursiveProps) => {
                 
 
           // >>> primary block type: group | list
-          const { field, template } = assembleLine({
+          const { field, template, sqlLine } = assembleLine({
             fieldId: innerFieldId,
             formPrefix,
             counter: innerCounter,
@@ -219,10 +227,12 @@ export const recursiveOne = (props: IRecursiveProps) => {
           innerFields.push(field);
           innerTemplates.push(`    -- Block: ${blockType}`);
           innerTemplates.push(template);
+          innerSqlLines.push(`    -- Block: ${blockType}`);
+          innerSqlLines.push(sqlLine);
 
           // >>> secondary block type: complex-modal | complex
           if ( complexType.includes(blockType) ) {
-            const { field, template } = assembleLine({
+            const { field, template, sqlLine } = assembleLine({
               fieldId: innerFieldId,
               formPrefix,
               counter: innerCounter,
@@ -244,6 +254,7 @@ export const recursiveOne = (props: IRecursiveProps) => {
             
             innerFields.push(field);
             innerTemplates.push(template);
+            innerSqlLines.push(sqlLine);
           }
 
           // --- >>> Group or List Children
@@ -254,13 +265,16 @@ export const recursiveOne = (props: IRecursiveProps) => {
             fieldId: innerFieldId, 
             fields: innerFields, 
             templates: innerTemplates,
-            parentId: blockType === 'group' ? templateId : complexTemplateId
+            parentId: blockType === 'group' ? templateId : complexTemplateId,
+            sqlLines: innerSqlLines
           });
           
           innerFields = [...groupResult.res.fields];
           innerTemplates = [...groupResult.res.templates];
+          innerSqlLines = [...groupResult.res.sqlLines];
           innerFields.push(`    -- End of the ${blockType}`);
           innerTemplates.push(`    -- End of the ${blockType}`);
+          innerSqlLines.push(`    -- End of the ${blockType}`);
           innerCounter = groupResult.counter;
           innerFieldId = groupResult.fieldId;
 
@@ -269,18 +283,21 @@ export const recursiveOne = (props: IRecursiveProps) => {
           //--- ERROR. 
           innerFields.push("    -- Error: 06. Unsupported frame name");
           innerTemplates.push("    -- Error: 06. Unsupported frame name");
+          innerSqlLines.push("    -- Error: 06. Unsupported frame name");
         }
       }
     } else {
       innerFields.push("    -- Error: A1. Unsupported field");
       innerTemplates.push("    -- Error: A1. Unsupported field");
+      innerSqlLines.push("    -- Error: A1. Unsupported field");
     }
   });
 
   return { 
     res: { 
       fields: innerFields, 
-      templates: innerTemplates 
+      templates: innerTemplates,
+      sqlLines: innerSqlLines
     }, 
     fieldId: innerFieldId, 
     counter: innerCounter 

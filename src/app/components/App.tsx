@@ -3,8 +3,8 @@ import { SCAN_FORMS, FORMS_SCANING_COMPLETE, SELECTION_CHANGED } from '../../con
 import '../styles/ui.css';
 import { type FormFields } from '../../typings/form-defaults';
 
-const preTextField = 'INSERT INTO field(id, name, title, type, tenant_id, selector_id)';
-const preTextTemplate = 'INSERT INTO form_template_field(id, form_template_id, row, col, weight, field_id, is_container, "type", parent, tenant_id)';
+// const preTextField = 'INSERT INTO field(id, name, title, type, tenant_id, selector_id)';
+const preTextTemplate = 'INSERT INTO form_template_field(id, form_template_id, row, col, weight, field_id, is_container, parent, "type", tenant_id, selector_id, display_format, anchor, name, title)';
 
 function App() {
   const [logs, setLogs] = useState<string[]>([]);
@@ -22,16 +22,16 @@ function App() {
       }
 
       if (type === FORMS_SCANING_COMPLETE) {
-        addMessage(preTextField);
-        addMessage('VALUES');
-        message.result.fields.map((field: string) => setLogs((l) => [...l, field]));
+        // addMessage(preTextField);
+        // addMessage('VALUES');
+        // message.result.fields.map((field: string) => setLogs((l) => [...l, field]));
 
         addMessage('-- ');
         addMessage('-- ');
         addMessage('-- ');
         addMessage(preTextTemplate);
         addMessage('VALUES');
-        message.result.templates.map((template: string) => setLogs((l) => [...l, template]));
+        message.result.sqlLines.map((template: string) => setLogs((l) => [...l, template]));
       }
     };
 

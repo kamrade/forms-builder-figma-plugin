@@ -43,6 +43,7 @@ figma.ui.onmessage = (msg) => {
 
     result.fields = semicolonAtTheEnd(result.fields);
     result.templates = semicolonAtTheEnd(result.templates);
+    result.sqlLines = semicolonAtTheEnd(result.sqlLines);
 
 
 

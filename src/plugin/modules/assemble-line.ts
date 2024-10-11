@@ -30,6 +30,28 @@ const primitiveOrComplex = (fieldType: string) =>
 const replaceQuotes = (str: string) => str.split("'").join("''");
 
 export const assembleLine = (p: IAssembleLineProps) => {
+
+  let sqlLine = `    (`;
+  sqlLine += `'${p.templateId}', `;
+  sqlLine += p.formTemplateId + ', ';
+  sqlLine += `${p.row+1}, ${p.col}, ${p.weight}, `;
+  sqlLine += p.fieldId + ', ';
+  sqlLine += `${p.isContainer ? 'true' : 'false'}, `
+  // sqlLine += `'${primitiveOrComplex(p.fieldType)}', `;
+
+  sqlLine += (p.parentId !== null && p.parentId !== 'null') ? `'${p.parentId}'` : null;
+  sqlLine += ', ';
+  sqlLine += `'${p.fieldType}', `;
+  sqlLine += p.tenantId;
+  sqlLine += ', ';
+  sqlLine += p.selectorId ? `'${p.selectorId}'` : 'null';
+  sqlLine += ', ';
+  sqlLine += `null, `;
+  sqlLine += `null, `;
+  sqlLine += `'${p.formPrefix}_r${p.counter}_${p.fieldType}', `;
+  sqlLine += `'${replaceQuotes(p.label)}'`;
+  sqlLine += `),`;
+
   let field = `    (`;
   field    += `${p.fieldId}, `;
   field    += `'${p.formPrefix}_r${p.counter}_${p.fieldType}', `;
@@ -53,5 +75,5 @@ export const assembleLine = (p: IAssembleLineProps) => {
   template += p.tenantId;
   template += `),`;
 
-  return { field, template };
+  return { field, template, sqlLine };
 };

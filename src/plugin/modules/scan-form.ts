@@ -19,13 +19,13 @@ export function scanForm(params: IScanFormParams) {
       fieldId: startingFieldId, 
       fields: [], 
       templates : [],
-
+      sqlLines: [],
       params, 
     });
 
     return result;
 
   } else {
-    return { fields: ['Please select correct form element'], templates: [] };
+    return { fields: ['Please select correct form element'], templates: [], sqlLines: ['Please select correct form element'] };
   }
 }
