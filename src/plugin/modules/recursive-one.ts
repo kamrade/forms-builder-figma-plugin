@@ -19,12 +19,12 @@ export interface IRecursiveProps {
 // This function helps to find checkbox label.
 */
 export const getElementLabel = (frame: SceneNode) => {
-  const labelEl = (frame as FrameNode)?.children.find((childEl) => childEl?.name === '> label' || childEl.name === '> label block');
+  const labelEl = (frame as FrameNode)?.children.find((childEl) => childEl?.name === '> label' || childEl?.name === '> label block');
 
-  if (labelEl.name === '> label') {
+  if (labelEl?.name === '> label') {
     return (labelEl as TextNode).characters;
-  } else if (labelEl.name === '> label block') {
-    const labelText = (labelEl as FrameNode).children.find((label: SceneNode) => label.name === '> label');
+  } else if (labelEl?.name === '> label block') {
+    const labelText = (labelEl as FrameNode).children.find((label: SceneNode) => label?.name === '> label');
     return (labelText as TextNode).characters;
   }
 

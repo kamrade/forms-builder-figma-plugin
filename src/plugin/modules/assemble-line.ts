@@ -27,7 +27,7 @@ export interface IAssembleLineProps {
 const primitiveOrComplex = (fieldType: string) =>
   wrapperFieldTypes.includes(fieldType) ? fieldType : 'primitive';
 
-const replaceQuotes = (str: string) => str.split("'").join("''");
+const replaceQuotes = (str: string) => str?.split("'").join("''");
 
 export const assembleLine = (p: IAssembleLineProps) => {
 
